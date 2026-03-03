@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost Books - Apocrypha &amp; Bible Parallels</title>
+    <style>
+        :root {
+            --bg-dark: #0f1724;
+            --gold: #c9a84c;
+            --text-light: #f5f0e8;
+            --card-bg: #1a2436;
+            --sidebar-bg: #152030;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Georgia, serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: rgba(15, 23, 36, 0.9);
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--gold);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--gold);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+        
+        .container {
+            display: flex;
+            min-height: calc(100vh - 150px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: var(--sidebar-bg);
+            padding: 1.5rem;
+            border-right: 1px solid var(--gold);
+        }
+        
+        .search-container {
+            margin-bottom: 2rem;
+        }
+        
+        #search {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--gold);
+            border-radius: 4px;
+            color: var(--text-light);
+            font-family: Georgia, serif;
+        }
+        
+        #search:focus {
+            outline: none;
+            border-color: #e0c05c;
+        }
+        
+        .book-list {
+            list-style: none;
+        }
+        
+        .book-item {
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .book-item:hover {
+            background-color: rgba(201, 168, 76, 0.2);
+        }
+        
+        .book-item.active {
+            background-color: var(--gold);
+            color: var(--bg-dark);
+            font-weight: bold;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+        }
+        
+        .parallels-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(800px, 1fr));
+            gap: 2rem;
+        }
+        
+        .parallel-card {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(201, 168, 76, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            display: flex;
+            border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+        }
+        
+        .panel {
+            flex: 1;
+            padding: 1.5rem;
+        }
+        
+        .lost-book-panel {
+            border-right: 1px solid rgba(201, 168, 76, 0.3);
+        }
+        
+        .reference {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .book-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .passage-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .card-footer {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(201, 168, 76, 0.3);
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        .theme-tag {
+            display: inline-block;
+            background-color: var(--gold);
+            color: var(--bg-dark);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+        }
+        
+        .notes {
+            font-style: italic;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--gold);
+            }
+            
+            .card-header {
+                flex-direction: column;
+            }
+            
+            .lost-book-panel {
+                border-right: none;
+                border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+            }
+            
+            .parallels-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Lost Books</h1>
+        <div class="subtitle">Apocrypha &amp; Bible Parallels Explorer</div>
+    </header>
+    
+    <div class="container">
+        <aside class="sidebar">
+            <div class="search-container">
+                <input type="text" id="search" placeholder="Search parallels...">
+            </div>
+            <ul class="book-list">
+                <li class="book-item active" data-book="all">All Books</li>
+                <li class="book-item" data-book="Enoch">Book of Enoch</li>
+                <li class="book-item" data-book="Jubilees">Book of Jubilees</li>
+                <li class="book-item" data-book="Thomas">Gospel of Thomas</li>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <div class="parallels-container" id="parallelsContainer">
+                <!-- Parallel cards will be inserted here by JavaScript -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const parallels = [
+            {
+                id: 1,
+                lostBook: { 
+                    name: 'Book of Enoch', 
+                    ref: '1 En. 1:1-9', 
+                    text: 'The words of the blessing of Enoch, wherewith he blessed the elect and righteous, who were to exist in the time of trouble; at the removal of the wicked and of the ungodly, when the Lord of spirits shall appear for the judgment of the world. And these words were written down by me, Enoch, while I was in the heavens, and saw a vision of holiness in a heavenly place, and there I heard everything from the angels, and understood everything, and wrote down everything which I both saw and heard. And this book is the word of righteousness for the elect and the righteous, who seek the Lord of spirits in humility of heart, and it shall preserve them from the wicked and the ungodly, and shall preserve them from the angels of punishment. And I Enoch wrote down all things which I both saw and heard in the heavens, and in the visions which I saw in the heavens, and in the earth, and in the abysses, and in the mountains, and in the hills, and in the rivers, and in the seas, and in all the mountains and hills, and in all the rivers and seas.' 
+                },
+                bible: { 
+                    ref: 'Jude 14-15', 
+                    text: 'And Enoch also, the seventh from Adam, prophesied of these, saying, Behold, the Lord cometh with ten thousands of his saints, To execute judgment upon all, and to convince all that are ungodly among them of all their ungodly deeds which they have ungodly committed, and of all their hard speeches which ungodly sinners have spoken against him.' 
+                },
+                theme: 'Judgment',
+                notes: 'Jude 14-15 is a direct quotation of 1 Enoch 1:9, one of the clearest NT citations of pseudepigraphal literature.'
+            },
+            {
+                id: 2,
+                lostBook: { 
+                    name: 'Book of Enoch', 
+                    ref: '1 En. 6:1-4', 
+                    text: 'And it came to pass when the children of men had multiplied that in those days were born unto them beautiful and comely daughters. And the angels, the children of the heaven, saw and lusted after them, and said to one another: "Come, let us choose wives from among the children of men and beget children." And Semiazaz, who was their leader, said unto them: "I fear ye will not indeed agree to do this deed, and I alone shall have to pay the penalty of a great sin." And they all answered him and said: "Let us all swear an oath, and all bind ourselves by mutual imprecations not to abandon this plan but to do this thing." Then sware they all together and bound themselves by mutual imprecations upon it.' 
+                },
+                bible: { 
+                    ref: 'Genesis 6:1-4', 
+                    text: 'And it came to pass, when men began to multiply on the face of the earth, and daughters were born unto them, That the sons of God saw the daughters of men that they were fair; and they took them wives of all which they chose. And the Lord said, My spirit shall not always strive with man, for that he also is flesh: yet his days shall be an hundred and twenty years. There were giants in the earth in those days; and also after that, when the sons of God came in unto the daughters of men, and they bare children to them, the same became mighty men which were of old, men of renown.' 
+                },
+                theme: 'Fall of Angels',
+                notes: 'Both texts describe the Watchers/Sons of God taking human wives'
+            },
+            {
+                id: 3,
+                lostBook: { 
+                    name: 'Book of Enoch', 
+                    ref: '1 En. 46:1-4', 
+                    text: 'And there I beheld the Ancient of Days whose head was white as wool, and with him another whose countenance resembled that of a man. His countenance was full of grace, like one of the holy angels. And I asked one of the angels, who went with me, and showed me every secret thing, concerning this Son of Man; who he was, whence he was, and why he accompanied the Ancient of Days. And he answered and said unto me: "This is the Son of Man who hath righteousness, with whom dwelleth righteousness, and who revealeth all the treasures of that which is concealed: For the Lord of Spirits hath chosen him, and his portion hath surpassed all before the Lord of Spirits in everlasting uprightness."' 
+                },
+                bible: { 
+                    ref: 'Daniel 7:9-14', 
+                    text: 'I beheld till the thrones were cast down, and the Ancient of days did sit, whose garment was white as snow, and the hair of his head like the pure wool: his throne was like the fiery flame, and his wheels burning fire. A fiery stream issued and came forth from before him: thousand thousands ministered unto him, and ten thousand times ten thousand stood before him: the judgment was set, and the books were opened. I beheld in the night visions, and, behold, one like the Son of man came with the clouds of heaven, and came to the Ancient of days, and they brought him near before him. And there was given him dominion, and glory, and a kingdom, that all people, nations, and languages, should serve him: his dominion is an everlasting dominion, which shall not pass away, and his kingdom that which shall not be destroyed.' 
+                },
+                theme: 'Messianic Vision',
+                notes: 'Both texts describe a divine figure receiving authority and judgment'
+            },
+            {
+                id: 4,
+                lostBook: { 
+                    name: 'Book of Jubilees', 
+                    ref: 'Jub. 2:1-3', 
+                    text: 'And the angel of the presence who went before the camp of Israel took the tables of the weeks of the law and of the testimony of the Sabbath on Mount Sinai, and he gave them to Moses that he might give them to the children of Israel that they should do according to them on the earth. And the glory of the Lord was on Mount Sinai, and the glory of the Lord was continually upon it for thirty days to sanctify the mountain, and the fire abode on it by day and by night. And no man could draw near to it for three days, for the Lord our God was in its midst, and all the trumpets sounded continually, and the sound of the trumpets was powerful and strong, and the eyes of all the people were open and awake because of the voice of the trumpets, and there was no people which was sleeping or slumbering during those three days.' 
+                },
+                bible: { 
+                    ref: 'Genesis 1:1-5', 
+                    text: 'In the beginning God created the heaven and the earth. And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters. And God said, Let there be light: and there was light. And God saw the light, that it was good: and God divided the light from the darkness. And God called the light Day, and the darkness he called Night. And the evening and the morning were the first day.' 
+                },
+                theme: 'Creation',
+                notes: 'Jubilees expands on the creation account in Genesis'
+            },
+            {
+                id: 5,
+                lostBook: { 
+                    name: 'Book of Jubilees', 
+                    ref: 'Jub. 3:1-7', 
+                    text: 'And I, Jubilees, was shown by the angel of peace the deeds which all the children of Israel would commit in the world until the day of judgment. And he swore to me that he would not take me from the midst of my generation until I accomplished this testimony to all the children of Israel. And he said to me: "Write down all the works of creation which are done in the six days, and the beginning of the seventh day, and the eighth day, and the completion of the heavens and the earth, and all their order, and the things which come from them in their generations, and the things which will befall them until that day of judgment, and by what means they will be judged, and all their works, and all their order, and their divisions, and their journeys, and their paths, and all their perfection, and all their commandments which the Lord has commanded them through Moses, and all their thoughts, and all their intentions, and the judgments which will befall them until the consummation of heaven and earth."' 
+                },
+                bible: { 
+                    ref: 'Genesis 2:15-25', 
+                    text: 'And the Lord God took the man, and put him into the garden of Eden to dress it and to keep it. And the Lord God commanded the man, saying, Of every tree of the garden thou mayest freely eat: But of the tree of the knowledge of good and evil, thou shalt not eat of it: for in the day that thou eatest thereof thou shalt surely die. And the Lord God said, It is not good that the man should be alone; I will make him an help meet for him. And out of the ground the Lord God formed every beast of the field, and every fowl of the air; and brought them unto Adam to see what he would call them: and whatsoever Adam called every living creature, that was the name thereof. And Adam gave names to all cattle, and to the fowl of the air, and to every beast of the field; but for Adam there was not found an help meet for him. And the Lord God caused a deep sleep to fall upon Adam, and he slept: and he took one of his ribs, and closed up the flesh instead thereof; And the rib, which the Lord God had taken from man, made he a woman, and brought her unto the man. And Adam said, This is now bone of my bones, and flesh of my flesh: she shall be called Woman, because she was taken out of Man. Therefore shall a man leave his father and his mother, and shall cleave unto his wife: and they shall be one flesh. And they were both naked, the man and his wife, and were not ashamed.' 
+                },
+                theme: 'Garden of Eden',
+                notes: 'Jubilees provides additional context to the Garden narrative'
+            },
+            {
+                id: 6,
+                lostBook: { 
+                    name: 'Gospel of Thomas', 
+                    ref: 'Thomas 2', 
+                    text: 'Jesus said: "Let him who seeks continue seeking until he finds; and when he finds, he will become troubled; and when he becomes troubled, he will be astonished, and he will rule over the All."'
+                },
+                bible: { 
+                    ref: 'Matthew 7:7-8', 
+                    text: 'Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you: For every one that asketh receiveth; and he that seeketh findeth; and to him that knocketh it shall be opened.' 
+                },
+                theme: 'Seeking Truth',
+                notes: 'Both emphasize the importance of persistent seeking'
+            },
+            {
+                id: 7,
+                lostBook: { 
+                    name: 'Gospel of Thomas', 
+                    ref: 'Thomas 20', 
+                    text: 'The disciples said to Jesus: "Tell us what the Kingdom of Heaven is like." Jesus said: "It is like a mustard seed. It is the smallest of all seeds. But when it falls on tilled soil, it produces a great plant and becomes a shelter for birds of the sky."'
+                },
+                bible: { 
+                    ref: 'Mark 4:30-32', 
+                    text: 'And he said, Whereunto shall we liken the kingdom of God? or with what comparison shall we compare it? It is like a grain of mustard seed, which, when it is sown in the earth, is less than all the seeds that be in the earth: But when it is sown, it groweth up, and becometh greater than all herbs, and shooteth out great branches; so that the fowls of the air may lodge under the shadow of it.' 
+                },
+                theme: 'Kingdom of Heaven',
+                notes: 'Both use the mustard seed parable to illustrate growth'
+            },
+            {
+                id: 8,
+                lostBook: { 
+                    name: 'Gospel of Thomas', 
+                    ref: 'Thomas 76', 
+                    text: 'Jesus said: "The Kingdom of the Father is like a merchant who found a pearl. That merchant was prudent; he sold the pearl and bought the one pearl alone. You too, seek his unfailing and enduring treasure where no moth comes near to devour and no worm destroys."'
+                },
+                bible: { 
+                    ref: 'Matthew 13:45-46', 
+                    text: 'Again, the kingdom of heaven is like unto a merchant man, seeking goodly pearls: Who, when he had found one pearl of great price, went and sold all that he had, and bought it.' 
+                },
+                theme: 'Kingdom Value',
+                notes: 'Both emphasize the incomparable value of the Kingdom'
+            }
+        ];
+
+        // DOM elements
+        const parallelsContainer = document.getElementById('parallelsContainer');
+        const searchInput = document.getElementById('search');
+        const bookItems = document.querySelectorAll('.book-item');
+
+        // Current filter state
+        let currentFilter = 'all';
+        let currentSearch = '';
+
+        // Render parallel cards
+        function renderParallels() {
+            parallelsContainer.innerHTML = '';
+            
+            const filteredParallels = parallels.filter(parallel => {
+                // Filter by book
+                const bookMatch = currentFilter === 'all' || 
+                                 parallel.lostBook.name.includes(currentFilter);
+                
+                // Filter by search term
+                const searchMatch = currentSearch === '' || 
+                                   parallel.lostBook.text.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                                   parallel.bible.text.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                                   parallel.theme.toLowerCase().includes(currentSearch.toLowerCase());
+                
+                return bookMatch && searchMatch;
+            });
+            
+            if (filteredParallels.length === 0) {
+                parallelsContainer.innerHTML = '<p>No parallels found matching your criteria.</p>';
+                return;
+            }
+            
+            filteredParallels.forEach(parallel => {
+                const card = document.createElement('div');
+                card.className = 'parallel-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="panel lost-book-panel">
+                            <span class="book-name">${parallel.lostBook.name}</span>
+                            <span class="reference">${parallel.lostBook.ref}</span>
+                            <div class="passage-text">${parallel.lostBook.text}</div>
+                        </div>
+                        <div class="panel bible-panel">
+                            <span class="reference">${parallel.bible.ref}</span>
+                            <div class="passage-text">${parallel.bible.text}</div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="theme-tag">${parallel.theme}</span>
+                        <div class="notes">${parallel.notes}</div>
+                    </div>
+                `;
+                parallelsContainer.appendChild(card);
+            });
+        }
+
+        // Set up event listeners
+        searchInput.addEventListener('input', () => {
+            currentSearch = searchInput.value;
+            renderParallels();
+        });
+
+        bookItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // Update active state
+                bookItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                
+                // Update filter
+                currentFilter = item.dataset.book;
+                renderParallels();
+            });
+        });
+
+        // Initial render
+        renderParallels();
+    </script>
+</body>
+</html>
