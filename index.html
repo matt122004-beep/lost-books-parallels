@@ -11,62 +11,170 @@
             --text-light: #f5f0e8;
             --card-bg: #1a2436;
             --sidebar-bg: #152030;
+            --sidebar-width: 240px;
+            --header-height: 60px;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Georgia, serif; background-color: var(--bg-dark); color: var(--text-light); line-height: 1.6; }
-        header { background-color: rgba(15,23,36,0.95); padding: 1.2rem 1.5rem; text-align: center; border-bottom: 1px solid var(--gold); position: sticky; top: 0; z-index: 100; }
-        h1 { font-size: 2.2rem; margin-bottom: 0.25rem; color: var(--gold); }
-        .subtitle { font-size: 1rem; opacity: 0.8; }
-        .stats { font-size: 0.85rem; color: var(--gold); opacity: 0.7; margin-top: 0.25rem; }
-        .container { display: flex; min-height: calc(100vh - 120px); }
-        .sidebar { width: 220px; background-color: var(--sidebar-bg); padding: 1.2rem; border-right: 1px solid rgba(201,168,76,0.4); flex-shrink: 0; overflow-y: auto; }
-        .search-container { margin-bottom: 1.5rem; }
-        #search { width: 100%; padding: 0.65rem; background: rgba(255,255,255,0.08); border: 1px solid var(--gold); border-radius: 4px; color: var(--text-light); font-family: Georgia, serif; font-size: 0.9rem; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { font-size: 16px; }
+        body { font-family: Georgia, serif; background-color: var(--bg-dark); color: var(--text-light); line-height: 1.6; overflow-x: hidden; }
+
+        /* ── HEADER ── */
+        header {
+            background-color: rgba(15,23,36,0.98);
+            height: var(--header-height);
+            padding: 0 1rem;
+            border-bottom: 1px solid var(--gold);
+            position: sticky; top: 0; z-index: 200;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .header-left { display: flex; align-items: center; gap: 0.75rem; }
+        .hamburger {
+            display: none;
+            background: none; border: none; cursor: pointer;
+            padding: 8px; border-radius: 4px;
+            color: var(--gold); font-size: 1.4rem; line-height: 1;
+            min-width: 44px; min-height: 44px;
+            align-items: center; justify-content: center;
+        }
+        h1 { font-size: 1.5rem; color: var(--gold); white-space: nowrap; }
+        .header-right { text-align: right; }
+        .subtitle { font-size: 0.8rem; opacity: 0.7; }
+        .stats { font-size: 0.75rem; color: var(--gold); opacity: 0.6; }
+
+        /* ── LAYOUT ── */
+        .container { display: flex; min-height: calc(100vh - var(--header-height)); position: relative; }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            padding: 1.2rem;
+            border-right: 1px solid rgba(201,168,76,0.4);
+            flex-shrink: 0;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+        .search-container { margin-bottom: 1.25rem; }
+        #search {
+            width: 100%; padding: 0.7rem 0.8rem;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid var(--gold); border-radius: 6px;
+            color: var(--text-light); font-family: Georgia, serif; font-size: 1rem;
+            min-height: 44px;
+        }
         #search:focus { outline: none; border-color: #e0c05c; }
-        .sidebar h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); opacity: 0.6; margin-bottom: 0.5rem; }
-        .book-list { list-style: none; margin-bottom: 1.5rem; }
-        .book-item { padding: 0.55rem 0.7rem; margin-bottom: 0.25rem; cursor: pointer; border-radius: 4px; transition: all 0.2s ease; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
-        .book-item:hover { background-color: rgba(201,168,76,0.15); }
+        .sidebar h3 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); opacity: 0.6; margin-bottom: 0.5rem; }
+        .book-list { list-style: none; margin-bottom: 1.25rem; }
+        .book-item {
+            padding: 0.65rem 0.75rem; margin-bottom: 0.2rem;
+            cursor: pointer; border-radius: 6px;
+            transition: background 0.15s; font-size: 0.9rem;
+            display: flex; justify-content: space-between; align-items: center;
+            min-height: 44px;
+        }
+        .book-item:hover, .book-item:active { background-color: rgba(201,168,76,0.15); }
         .book-item.active { background-color: var(--gold); color: var(--bg-dark); font-weight: bold; }
-        .book-item .count { font-size: 0.75rem; opacity: 0.7; }
-        .book-item.active .count { opacity: 0.6; }
-        .theme-section { margin-bottom: 1.5rem; }
+        .book-item .count { font-size: 0.75rem; opacity: 0.65; }
+        .book-item.active .count { opacity: 0.55; }
+        .theme-section { margin-bottom: 1.25rem; }
         .theme-list { list-style: none; }
-        .theme-item { padding: 0.4rem 0.7rem; margin-bottom: 0.2rem; cursor: pointer; border-radius: 4px; font-size: 0.85rem; transition: all 0.2s; }
-        .theme-item:hover { background-color: rgba(201,168,76,0.1); }
+        .theme-item {
+            padding: 0.55rem 0.75rem; margin-bottom: 0.15rem;
+            cursor: pointer; border-radius: 6px; font-size: 0.85rem;
+            transition: background 0.15s; min-height: 40px;
+            display: flex; align-items: center;
+        }
+        .theme-item:hover, .theme-item:active { background-color: rgba(201,168,76,0.1); }
         .theme-item.active { color: var(--gold); font-weight: bold; }
-        .main-content { flex: 1; padding: 1.5rem 2rem; overflow-y: auto; }
-        .results-header { margin-bottom: 1.5rem; color: var(--gold); opacity: 0.7; font-size: 0.9rem; }
-        .parallels-container { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
-        .parallel-card { background-color: var(--card-bg); border: 1px solid rgba(201,168,76,0.25); border-radius: 8px; overflow: hidden; transition: border-color 0.2s; }
+
+        /* ── MAIN CONTENT ── */
+        .main-content { flex: 1; padding: 1.25rem 1.5rem; overflow-x: hidden; min-width: 0; }
+        .results-header { margin-bottom: 1.25rem; color: var(--gold); opacity: 0.7; font-size: 0.9rem; }
+        .parallels-container { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+
+        /* ── CARDS ── */
+        .parallel-card {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(201,168,76,0.25);
+            border-radius: 10px; overflow: hidden;
+            transition: border-color 0.2s;
+        }
         .parallel-card:hover { border-color: rgba(201,168,76,0.5); }
         .card-header { display: flex; border-bottom: 1px solid rgba(201,168,76,0.2); }
-        .panel { flex: 1; padding: 1.25rem; }
+        .panel { flex: 1; padding: 1.1rem 1.2rem; min-width: 0; }
         .lost-book-panel { border-right: 1px solid rgba(201,168,76,0.2); }
-        .panel-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); opacity: 0.6; margin-bottom: 0.5rem; }
-        .reference { font-family: 'Courier New', monospace; font-size: 1rem; color: var(--gold); margin-bottom: 0.75rem; display: block; font-weight: bold; }
-        .book-name { font-weight: bold; margin-bottom: 0.4rem; display: block; font-size: 0.95rem; }
-        .passage-text { font-size: 0.95rem; line-height: 1.75; }
-        .card-footer { padding: 1rem 1.25rem; border-top: 1px solid rgba(201,168,76,0.2); background-color: rgba(0,0,0,0.15); display: flex; align-items: flex-start; gap: 1rem; }
-        .theme-tag { display: inline-block; background-color: var(--gold); color: var(--bg-dark); padding: 0.25rem 0.7rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold; white-space: nowrap; flex-shrink: 0; }
-        .notes { font-style: italic; opacity: 0.85; font-size: 0.9rem; line-height: 1.5; }
+        .panel-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold); opacity: 0.55; margin-bottom: 0.4rem; }
+        .reference { font-family: 'Courier New', monospace; font-size: 0.95rem; color: var(--gold); margin-bottom: 0.6rem; display: block; font-weight: bold; }
+        .book-name { font-weight: bold; margin-bottom: 0.35rem; display: block; font-size: 0.9rem; }
+        .passage-text { font-size: 0.9rem; line-height: 1.7; }
+        .card-footer {
+            padding: 0.85rem 1.2rem; border-top: 1px solid rgba(201,168,76,0.2);
+            background-color: rgba(0,0,0,0.15);
+            display: flex; align-items: flex-start; gap: 0.75rem; flex-wrap: wrap;
+        }
+        .theme-tag {
+            display: inline-block; background-color: var(--gold); color: var(--bg-dark);
+            padding: 0.2rem 0.65rem; border-radius: 20px; font-size: 0.78rem;
+            font-weight: bold; white-space: nowrap; flex-shrink: 0;
+        }
+        .notes { font-style: italic; opacity: 0.85; font-size: 0.88rem; line-height: 1.5; }
         .empty-state { text-align: center; padding: 4rem 2rem; opacity: 0.5; }
-        @media (max-width: 900px) {
-            .container { flex-direction: column; }
-            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--gold); }
+
+        /* ── OVERLAY (mobile) ── */
+        .sidebar-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.6); z-index: 150;
+        }
+        .sidebar-overlay.visible { display: block; }
+
+        /* ── MOBILE ── */
+        @media (max-width: 768px) {
+            :root { --header-height: 56px; }
+            h1 { font-size: 1.25rem; }
+            .hamburger { display: flex; }
+
+            /* Sidebar becomes a fixed drawer */
+            .sidebar {
+                position: fixed;
+                top: var(--header-height); left: 0; bottom: 0;
+                width: min(var(--sidebar-width), 85vw);
+                z-index: 160;
+                transform: translateX(-110%);
+                box-shadow: 4px 0 20px rgba(0,0,0,0.5);
+            }
+            .sidebar.open { transform: translateX(0); }
+
+            /* Cards stack single column with stacked panels */
+            .main-content { padding: 1rem; }
             .card-header { flex-direction: column; }
             .lost-book-panel { border-right: none; border-bottom: 1px solid rgba(201,168,76,0.2); }
+            .panel { padding: 0.9rem 1rem; }
+            .passage-text { font-size: 0.88rem; }
+            .card-footer { flex-direction: column; gap: 0.5rem; padding: 0.75rem 1rem; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.1rem; }
+            .subtitle, .stats { display: none; }
+            .parallels-container { gap: 1rem; }
+            .reference { font-size: 0.88rem; }
         }
     </style>
 </head>
 <body>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 <header>
-    <h1>Lost Books</h1>
-    <div class="subtitle">Apocrypha &amp; Bible Parallels Explorer</div>
-    <div class="stats" id="headerStats"></div>
+    <div class="header-left">
+        <button class="hamburger" id="hamburger" aria-label="Open filters">☰</button>
+        <h1>Lost Books</h1>
+    </div>
+    <div class="header-right">
+        <div class="subtitle">Apocrypha &amp; Bible Parallels</div>
+        <div class="stats" id="headerStats"></div>
+    </div>
 </header>
 <div class="container">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="search-container">
             <input type="text" id="search" placeholder="Search parallels…">
         </div>
@@ -255,10 +363,40 @@ function render() {
 // Init
 buildSidebar();
 render();
-document.getElementById('headerStats').textContent = `${parallels.length} parallels across ${allBooks.length} books`;
+document.getElementById('headerStats').textContent = `${parallels.length} parallels · ${allBooks.length} books`;
 document.getElementById('search').addEventListener('input', e => {
     currentSearch = e.target.value;
     render();
+});
+
+// Mobile sidebar toggle
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+const hamburger = document.getElementById('hamburger');
+
+function openSidebar() {
+    sidebar.classList.add('open');
+    overlay.classList.add('visible');
+    hamburger.textContent = '✕';
+    document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('visible');
+    hamburger.textContent = '☰';
+    document.body.style.overflow = '';
+}
+hamburger.addEventListener('click', () => {
+    sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+});
+overlay.addEventListener('click', closeSidebar);
+
+// Close sidebar when a filter is selected on mobile
+document.getElementById('bookList').addEventListener('click', () => {
+    if (window.innerWidth <= 768) closeSidebar();
+});
+document.getElementById('themeList').addEventListener('click', () => {
+    if (window.innerWidth <= 768) closeSidebar();
 });
 </script>
 </body>
