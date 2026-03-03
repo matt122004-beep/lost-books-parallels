@@ -321,34 +321,49 @@
         /* ── MOBILE ── */
         @media (max-width: 768px) {
             :root { --header-height: 56px; }
-            h1 { font-size: 1.25rem; }
-            .hamburger { display: flex; }
+            h1 { font-size: 1.25rem; font-family: var(--font-display); font-weight: 600; }
+            .hamburger { 
+                display: flex; 
+                background: rgba(212,168,83,0.15);
+                border: 1px solid var(--border-subtle);
+            }
 
-            /* Sidebar becomes a fixed drawer */
+            /* Sidebar becomes a fixed premium drawer */
             .sidebar {
                 position: fixed;
                 top: var(--header-height); left: 0; bottom: 0;
                 width: min(var(--sidebar-width), 85vw);
                 z-index: 160;
                 transform: translateX(-110%);
-                box-shadow: 4px 0 20px rgba(0,0,0,0.5);
+                box-shadow: 8px 0 32px rgba(0,0,0,0.6);
+                backdrop-filter: blur(20px);
+                background: rgba(13,17,23,0.95);
+                border-right: 1px solid var(--border-subtle);
             }
             .sidebar.open { transform: translateX(0); }
 
-            /* Cards stack single column with stacked panels */
-            .main-content { padding: 1rem; }
+            /* Cards stack single column with premium spacing */
+            .main-content { padding: 1.25rem; }
             .card-header { flex-direction: column; }
-            .lost-book-panel { border-right: none; border-bottom: 1px solid rgba(201,168,76,0.2); }
-            .panel { padding: 0.9rem 1rem; }
-            .passage-text { font-size: 0.88rem; }
-            .card-footer { flex-direction: column; gap: 0.5rem; padding: 0.75rem 1rem; }
+            .lost-book-panel { border-right: none; border-bottom: 1px solid var(--border-subtle); }
+            .panel { padding: 1.1rem 1.25rem; }
+            .passage-text { font-size: 0.86rem; line-height: 1.7; }
+            .card-footer { 
+                flex-direction: column; 
+                gap: 0.6rem; 
+                padding: 0.9rem 1.25rem; 
+            }
+            .theme-tag { font-size: 0.7rem; padding: 0.25rem 0.7rem; }
         }
 
         @media (max-width: 480px) {
             h1 { font-size: 1.1rem; }
             .subtitle, .stats { display: none; }
-            .parallels-container { gap: 1rem; }
-            .reference { font-size: 0.88rem; }
+            .parallels-container { gap: 1.25rem; }
+            .reference { font-size: 0.85rem; }
+            .panel { padding: 1rem; }
+            .book-name { font-size: 1rem; }
+            .passage-text { font-size: 0.84rem; }
         }
     </style>
 </head>
