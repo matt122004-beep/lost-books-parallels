@@ -212,34 +212,105 @@
         }
         .parallels-container { display: grid; grid-template-columns: 1fr; gap: 1.75rem; }
 
-        /* ── CARDS ── */
-        .parallel-card {
-            background-color: var(--card-bg);
-            border: 1px solid rgba(201,168,76,0.25);
-            border-radius: 10px; overflow: hidden;
-            transition: border-color 0.2s;
+/* ── CARDS ── */
+        .parallel-card { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-subtle); 
+            border-radius: 14px; 
+            overflow: hidden; 
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); 
+            box-shadow: var(--shadow-sm);
+            position: relative;
         }
-        .parallel-card:hover { border-color: rgba(201,168,76,0.5); }
-        .card-header { display: flex; border-bottom: 1px solid rgba(201,168,76,0.2); }
-        .panel { flex: 1; padding: 1.1rem 1.2rem; min-width: 0; }
-        .lost-book-panel { border-right: 1px solid rgba(201,168,76,0.2); }
-        .panel-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold); opacity: 0.55; margin-bottom: 0.4rem; }
-        .reference { font-family: 'Courier New', monospace; font-size: 0.95rem; color: var(--gold); margin-bottom: 0.6rem; display: block; font-weight: bold; }
-        .book-name { font-weight: bold; margin-bottom: 0.35rem; display: block; font-size: 0.9rem; }
-        .passage-text { font-size: 0.9rem; line-height: 1.7; }
-        .card-footer {
-            padding: 0.85rem 1.2rem; border-top: 1px solid rgba(201,168,76,0.2);
-            background-color: rgba(0,0,0,0.15);
-            display: flex; align-items: flex-start; gap: 0.75rem; flex-wrap: wrap;
+        .parallel-card:hover { 
+            border-color: var(--border-accent); 
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.4), var(--shadow-gold);
         }
-        .theme-tag {
-            display: inline-block; background-color: var(--gold); color: var(--bg-dark);
-            padding: 0.2rem 0.65rem; border-radius: 20px; font-size: 0.78rem;
-            font-weight: bold; white-space: nowrap; flex-shrink: 0;
+        .card-header { 
+            display: flex; 
+            border-bottom: 1px solid var(--border-subtle); 
+            background: rgba(0,0,0,0.12);
         }
-        .notes { font-style: italic; opacity: 0.85; font-size: 0.88rem; line-height: 1.5; }
-        .empty-state { text-align: center; padding: 4rem 2rem; opacity: 0.5; }
-
+        .panel { 
+            flex: 1; 
+            padding: 1.5rem 1.75rem; 
+            min-width: 0; 
+        }
+        .lost-book-panel { 
+            border-right: 1px solid var(--border-subtle); 
+        }
+        .panel-label { 
+            font-family: var(--font-body);
+            font-size: 0.65rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.12em; 
+            color: var(--gold); 
+            font-weight: 600;
+            margin-bottom: 0.5rem; 
+        }
+        .reference { 
+            font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace; 
+            font-size: 0.88rem; 
+            color: var(--gold-light); 
+            margin-bottom: 0.7rem; 
+            display: block; 
+            font-weight: 500;
+        }
+        .book-name { 
+            font-family: var(--font-display);
+            font-weight: 700; 
+            margin-bottom: 0.45rem; 
+            display: block; 
+            font-size: 1.05rem; 
+            color: var(--text-light);
+            font-style: italic;
+        }
+        .passage-text { 
+            font-family: var(--font-body);
+            font-size: 0.9rem; 
+            line-height: 1.75; 
+            color: var(--text-muted);
+        }
+        .card-footer { 
+            padding: 1.1rem 1.75rem; 
+            border-top: 1px solid var(--border-subtle); 
+            background: rgba(0,0,0,0.18); 
+            display: flex; 
+            align-items: flex-start; 
+            gap: 0.85rem; 
+            flex-wrap: wrap; 
+        }
+        .theme-tag { 
+            display: inline-block; 
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%); 
+            color: var(--bg-dark); 
+            padding: 0.3rem 0.8rem; 
+            border-radius: 20px; 
+            font-family: var(--font-body);
+            font-size: 0.72rem; 
+            font-weight: 600; 
+            white-space: nowrap; 
+            flex-shrink: 0;
+            letter-spacing: 0.03em;
+            box-shadow: var(--shadow-sm);
+        }
+        .notes { 
+            font-family: var(--font-body);
+            font-style: italic; 
+            opacity: 0.8; 
+            font-size: 0.85rem; 
+            line-height: 1.5; 
+            color: var(--text-dim);
+        }
+        .empty-state { 
+            text-align: center; 
+            padding: 5rem 2rem; 
+            opacity: 0.4; 
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            color: var(--text-muted);
+        }
         /* ── OVERLAY (mobile) ── */
         .sidebar-overlay {
             display: none; position: fixed; inset: 0;
