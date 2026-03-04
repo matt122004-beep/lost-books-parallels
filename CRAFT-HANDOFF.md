@@ -1,47 +1,40 @@
 # CRAFT-HANDOFF.md
 
 ## Timestamp
-2026-03-04 10:36 PST
+2026-03-04 11:01 PST
 
 ## Current Task Status
-- **v19.0 completed and pushed**.
-- Mobile app advanced polish features are now live.
+- v17–v19 complete and pushed.
+- Pre-v20 loose ends are now checkpointed and pushed.
+- Ready to begin v20 in a clean state.
 
-## What Was Completed in v19
-1. **Full-screen PWA splash screen**
-   - Added `splash.png` startup image.
-   - Added `apple-touch-startup-image` link and meta tags.
+## Latest Checkpoint (pre-v20)
+- Commit: `e2ac753`
+- Message: `chore: pre-v20 checkpoint for offline cache and preference sync groundwork`
+- Changes checkpointed:
+  - `index.html`: desktop/tablet media enhancements + backend preference sync hook on theme toggle
+  - `sw.js`: expanded offline cache set and version bump groundwork
 
-2. **Theme-aware icon variants**
-   - Added dark-mode versions of icons (`icon-192-dark.png`, `icon-512-dark.png`).
-   - Updated `manifest.json` with `purpose: dark` entries.
+## Stable Completed Milestones
+- v17.0: PWA/install/push/mobile UX
+- v18.0: native icons + route-aware nav + offline indicator + simulated push sync
+- v19.0: splash screen + dark icons + backend subscribe + conflict resolution
 
-3. **Real backend endpoint for notifications**
-   - Replaced simulated subscription with `/api/subscribe` POST endpoint.
-   - Added Web Push API subscription flow with application server key.
-   - Maintained localStorage fallback for unsupported environments.
-
-4. **Sync conflict resolution**
-   - Added `resolveConflicts()` helper for merging remote/local data.
-   - Integrated into `simulateSync()` for favorites/notes/comments.
-   - Uses last-write-wins by timestamp for simplicity.
-
-## Files Touched (this unit)
+## Files Touched (latest cycle)
 - `/Users/matt/clawd/projects/lost-books/index.html`
-- `/Users/matt/clawd/projects/lost-books/manifest.json`
-- `/Users/matt/clawd/projects/lost-books/splash.png`
-- `/Users/matt/clawd/projects/lost-books/icons/icon-192-dark.png`
-- `/Users/matt/clawd/projects/lost-books/icons/icon-512-dark.png`
+- `/Users/matt/clawd/projects/lost-books/sw.js`
 - `/Users/matt/clawd/projects/lost-books/CRAFT-HANDOFF.md`
 
 ## Git
-- Feature commit: `11e95a0`
-- Message: `v19.0: splash screen, dark mode icons, real backend subscribe, and sync conflict resolution`
 - Branch: `main`
-- Push: successful
+- Remote: pushed successfully
 
-## Next Suggested Work (v20)
-1. Replace placeholder application server key with real VAPID keypair.
-2. Add full offline reading mode (cache all parallels for offline access).
-3. Add progressive enhancement for larger screens (tablet/desktop PWA layout).
-4. Add user preference sync (dark mode, reading view) to backend.
+## Next Planned Work (v20)
+Platform features:
+1. Plugin marketplace
+2. Third-party extensions
+3. Custom themes
+4. White-label licensing
+
+## Context Health
+- Context is elevated (per Arch warning). Handoff is updated and safe for fresh-session continuation.
