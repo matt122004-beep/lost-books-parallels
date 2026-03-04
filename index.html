@@ -624,6 +624,8 @@
         <div class="subtitle">Apocrypha &amp; Bible Parallels</div>
         <div class="stats" id="headerStats"></div>
         <div class="stats" id="userStatus"></div>
+        <div class="stats" id="offlineIndicator" style="display:none;color:#ef4444;font-size:.75rem;">Offline</div>
+        <div class="stats" id="syncStatus" style="display:none;font-size:.75rem;opacity:.85;">Syncing…</div>
         <div class="header-actions">
             <button class="action-btn" id="loginBtn" title="GitHub login">Login</button>
             <button class="action-btn" id="themeToggleBtn" title="Toggle dark mode">🌙</button>
@@ -745,10 +747,10 @@
 </div>
 
 <nav class="bottom-nav" id="bottomNav" aria-label="Mobile navigation">
-  <button id="bnHome">Home</button>
-  <button id="bnSearch">Search</button>
-  <button id="bnFavs">Favorites</button>
-  <button id="bnInstall">Install</button>
+  <button id="bnHome" data-route="home">Home</button>
+  <button id="bnSearch" data-route="search">Search</button>
+  <button id="bnFavs" data-route="favorites">Favorites</button>
+  <button id="bnInstall" data-route="install">Install</button>
 </nav>
 
 <div class="help-modal" id="helpModal" aria-hidden="true">
@@ -1814,6 +1816,18 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 }
 
+let currentRoute = 'home';
+function setActiveRoute(route) {
+  currentRoute = route;
+  document.querySelectorAll('[data-route]').forEach(b => b.style.background = b.dataset.route === route ? 'rgba(212,168,83,0.15)' : '');
+}
+setActiveRoute('home');
+
+window.addEventListener('popstate', () => {
+  const route = location.hash.startsWith('#favorites') ? 'favorites' : 'home';
+  setActiveRoute(route);
+});
+
 let deferredInstallPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
@@ -1837,17 +1851,60 @@ document.getElementById('bnFavs')?.addEventListener('click', () => {
     const id = Number(card.dataset.pid);
     card.style.display = favs.has(id) ? '' : 'none';
   });
+  setActiveRoute('favorites');
+  history.pushState(null, '', '#favorites');
 });
+
+window.addEventListener('online',  () => document.getElementById('offlineIndicator').style.display = 'none');
+window.addEventListener('offline', () => document.getElementById('offlineIndicator').style.display = 'block');
+document.getElementById('offlineIndicator').style.display = navigator.onLine ? 'none' : 'block';
+
+// Simulate sync status
+async function simulateSync() {
+  const sync = document.getElementById('syncStatus');
+  if (!sync) return;
+  sync.style.display = 'block';
+  await new Promise(r => setTimeout(r, 800));
+  sync.style.display = 'none';
+}
+simulateSync();
 
 async function setupDailyReminder() {
   if (!('Notification' in window)) return;
   if (Notification.permission === 'default') await Notification.requestPermission();
   if (Notification.permission !== 'granted') return;
-  const last = Number(localStorage.getItem('lastReminderTs') || 0);
-  const now = Date.now();
-  if (now - last > 24*60*60*1000) {
-    new Notification('Lost Books Daily Reading', { body: 'Open a new parallel and continue your study today.' });
-    localStorage.setItem('lastReminderTs', String(now));
+
+  // Simulate subscription endpoint registration
+  const simulateSubscribeEndpoint = async () => {
+    console.log('[Push] Simulated subscription registered');
+    localStorage.setItem('pushSubscribed', 'true');
+  };
+
+  // Schedule via service worker periodic background sync (simulated)
+  if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.ready.then(reg => {
+      if (reg.periodicSync) {
+        reg.periodicSync.register('daily-reminder', { minInterval: 24 * 60 * 60 * 1000 })
+          .then(() => console.log('[Push] Periodic sync registered'))
+          .catch(err => console.warn('[Push] Periodic sync failed:', err));
+      } else {
+        // Fallback to localStorage-based daily check
+        const last = Number(localStorage.getItem('lastReminderTs') || 0);
+        const now = Date.now();
+        if (now - last > 24*60*60*1000) {
+          new Notification('Lost Books Daily Reading', { body: 'Open a new parallel and continue your study today.' });
+          localStorage.setItem('lastReminderTs', String(now));
+        }
+      }
+    });
+  } else {
+    // Fallback to localStorage-based daily check
+    const last = Number(localStorage.getItem('lastReminderTs') || 0);
+    const now = Date.now();
+    if (now - last > 24*60*60*1000) {
+      new Notification('Lost Books Daily Reading', { body: 'Open a new parallel and continue your study today.' });
+      localStorage.setItem('lastReminderTs', String(now));
+    }
   }
 }
 setupDailyReminder();
