@@ -11,15 +11,15 @@
 
         :root {
             /* Premium Color Palette */
-            --bg-dark: #0d1117;
-            --bg-card: #161b22;
-            --bg-sidebar: #0d1117;
-            --gold: #d4a853;
-            --gold-light: #e8c87a;
-            --gold-dark: #b8923f;
-            --text-light: #e6e1d6;
-            --text-muted: #8b8680;
-            --text-dim: #5c5854;
+            --bg-dark: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-sidebar: #f1f5f9;
+            --gold: #b3872f;
+            --gold-light: #9f7a24;
+            --gold-dark: #7c5f1d;
+            --text-light: #0f172a;
+            --text-muted: #334155;
+            --text-dim: #64748b;
             --border-subtle: rgba(212, 168, 83, 0.15);
             --border-accent: rgba(212, 168, 83, 0.35);
             
@@ -36,6 +36,20 @@
             /* Typography */
             --font-display: 'Cormorant Garamond', Georgia, serif;
             --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        [data-theme="dark"] {
+            --bg-dark: #0f172a;
+            --bg-card: #111827;
+            --bg-sidebar: #0b1220;
+            --gold: #94a3b8;
+            --gold-light: #e2e8f0;
+            --gold-dark: #64748b;
+            --text-light: #e2e8f0;
+            --text-muted: #cbd5e1;
+            --text-dim: #94a3b8;
+            --border-subtle: rgba(148, 163, 184, 0.2);
+            --border-accent: rgba(148, 163, 184, 0.4);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -95,6 +109,30 @@
             font-size: 0.72rem;
             cursor: pointer;
         }
+        html { scroll-behavior: smooth; }
+        .reading-view .sidebar,
+        .reading-view .header-actions,
+        .reading-view .subtitle,
+        .reading-view .stats { display: none !important; }
+        .reading-view .main-content { margin: 0 auto; max-width: 65ch; font-family: Georgia, serif; }
+        .reading-view .passage-text { font-size: 1.05rem; line-height: 1.9; }
+        .floating-btn {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            z-index: 260;
+            display: none;
+            background: var(--bg-card);
+            color: var(--text-light);
+            border: 1px solid var(--border-accent);
+            border-radius: 999px;
+            padding: 0.6rem 0.75rem;
+            cursor: pointer;
+        }
+        .floating-btn.show { display: block; }
+        .book-modal { display:none; position:fixed; inset:0; z-index:320; background:rgba(0,0,0,.6); align-items:center; justify-content:center; }
+        .book-modal.open { display:flex; }
+        .book-modal-content { background: var(--bg-card); color: var(--text-light); border:1px solid var(--border-accent); border-radius:12px; width:min(680px,calc(100% - 2rem)); padding:1rem 1.2rem; }
 
         /* ── LAYOUT ── */
         .container { display: flex; min-height: calc(100vh - var(--header-height)); position: relative; }
@@ -438,6 +476,8 @@
         <div class="subtitle">Apocrypha &amp; Bible Parallels</div>
         <div class="stats" id="headerStats"></div>
         <div class="header-actions">
+            <button class="action-btn" id="themeToggleBtn" title="Toggle dark mode">🌙</button>
+            <button class="action-btn" id="readingToggleBtn" title="Toggle reading view">Read</button>
             <button class="action-btn" id="exportJsonBtn" title="Export JSON">JSON</button>
             <button class="action-btn" id="exportCsvBtn" title="Export CSV">CSV</button>
             <button class="action-btn" id="helpBtn" title="Keyboard help">?</button>
@@ -471,6 +511,10 @@
     <p><strong>Esc</strong> Close help/modal/sidebar</p>
   </div>
 </div>
+<div class="book-modal" id="bookModal" aria-hidden="true">
+  <div class="book-modal-content" id="bookModalContent"></div>
+</div>
+<button class="floating-btn" id="scrollTopBtn" aria-label="Scroll to top">↑</button>
 <script>
 const parallels = [
   // ── 1 ENOCH ──────────────────────────────────────────────────────────────
@@ -651,7 +695,7 @@ function render() {
             <div class="card-header">
                 <div class="panel lost-book-panel">
                     <div class="panel-label">Apocrypha / Pseudepigrapha</div>
-                    <span class="book-name">${p.lostBook.name}</span>
+                    <span class="book-name" data-book="${p.lostBook.name}" style="cursor:pointer;text-decoration:underline;">${p.lostBook.name}</span>
                     <span class="reference">${p.lostBook.ref}</span>
                     <div class="passage-text">${p.lostBook.text}</div>
                 </div>
@@ -664,7 +708,13 @@ function render() {
             <div class="card-footer">
                 <span class="theme-tag">${p.theme}</span>
                 <div class="notes parallel-meta">${p.notes}</div>
+                <div class="notes" style="width:100%;font-size:.78rem;opacity:.95;">
+                  MLA: ${p.lostBook.name}. <em>${p.lostBook.ref}</em>.<br>
+                  APA: ${p.lostBook.name} (${p.lostBook.ref}).<br>
+                  Chicago: ${p.lostBook.name}, ${p.lostBook.ref}.
+                </div>
                 <button class="copy-btn" data-id="${p.id}">Copy</button>
+                <button class="copy-btn" data-cite="${p.id}">Copy Citations</button>
             </div>`;
         container.appendChild(card);
     });
@@ -714,6 +764,27 @@ document.getElementById('headerStats').textContent = `${parallels.length} parall
 document.getElementById('exportJsonBtn').addEventListener('click', exportAsJson);
 document.getElementById('exportCsvBtn').addEventListener('click', exportAsCsv);
 
+// Dark mode: system detect + manual toggle
+const root = document.documentElement;
+const storedTheme = localStorage.getItem('theme');
+if (storedTheme) {
+    root.setAttribute('data-theme', storedTheme);
+} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    root.setAttribute('data-theme', 'dark');
+}
+document.getElementById('themeToggleBtn').addEventListener('click', () => {
+    const current = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', current);
+    localStorage.setItem('theme', current);
+});
+
+// Reading view toggle
+const readingBtn = document.getElementById('readingToggleBtn');
+readingBtn.addEventListener('click', () => {
+    document.body.classList.toggle('reading-view');
+    readingBtn.textContent = document.body.classList.contains('reading-view') ? 'Exit Read' : 'Read';
+});
+
 let searchDebounceTimer;
 document.getElementById('search').addEventListener('input', e => {
     currentSearch = e.target.value;
@@ -723,16 +794,48 @@ document.getElementById('search').addEventListener('input', e => {
     }, 300);
 });
 
+const bookMeta = {
+  '1 Enoch': { author: 'Trad. Enochic', date: '3rd–1st c. BCE', description: 'Apocalyptic visions, Watchers, judgment.' },
+  '2 Enoch': { author: 'Unknown', date: '1st c. CE', description: 'Slavonic Enoch; cosmology and ethics.' },
+  'Jubilees': { author: 'Unknown', date: '2nd c. BCE', description: 'Retelling Genesis/Exodus with calendar theology.' },
+  'Gospel of Thomas': { author: 'Trad. Thomas', date: '1st–2nd c. CE', description: 'Sayings gospel focused on wisdom logia.' },
+  'Wisdom of Solomon': { author: 'Hellenistic Jewish author', date: '1st c. BCE', description: 'Wisdom theology and righteous suffering.' }
+};
+
 document.getElementById('parallelsContainer').addEventListener('click', async (e) => {
-    const btn = e.target.closest('.copy-btn');
-    if (!btn) return;
-    const id = Number(btn.dataset.id);
-    const p = parallels.find(x => x.id === id);
-    if (!p) return;
-    const text = `${p.lostBook.name} (${p.lostBook.ref})\n${p.lostBook.text}\n\n${p.bible.ref}\n${p.bible.text}`;
-    await navigator.clipboard.writeText(text);
-    btn.textContent = 'Copied';
-    setTimeout(() => (btn.textContent = 'Copy'), 1200);
+    const citeBtn = e.target.closest('[data-cite]');
+    if (citeBtn) {
+        const id = Number(citeBtn.dataset.cite);
+        const p = parallels.find(x => x.id === id);
+        if (!p) return;
+        const citations = `MLA: ${p.lostBook.name}. ${p.lostBook.ref}.\nAPA: ${p.lostBook.name} (${p.lostBook.ref}).\nChicago: ${p.lostBook.name}, ${p.lostBook.ref}.`;
+        await navigator.clipboard.writeText(citations);
+        citeBtn.textContent = 'Citations Copied';
+        setTimeout(() => (citeBtn.textContent = 'Copy Citations'), 1200);
+        return;
+    }
+
+    const btn = e.target.closest('[data-id]');
+    if (btn) {
+        const id = Number(btn.dataset.id);
+        const p = parallels.find(x => x.id === id);
+        if (!p) return;
+        const text = `${p.lostBook.name} (${p.lostBook.ref})\n${p.lostBook.text}\n\n${p.bible.ref}\n${p.bible.text}`;
+        await navigator.clipboard.writeText(text);
+        btn.textContent = 'Copied';
+        setTimeout(() => (btn.textContent = 'Copy'), 1200);
+        return;
+    }
+
+    const bookEl = e.target.closest('.book-name[data-book]');
+    if (bookEl) {
+        const name = bookEl.dataset.book;
+        const meta = bookMeta[name] || { author: 'Unknown', date: 'Unknown', description: 'Reference text in this corpus.' };
+        const sample = parallels.find(p => p.lostBook.name === name);
+        document.getElementById('bookModalContent').innerHTML = `<h3 style="color:var(--gold-light);margin-bottom:.4rem;">${name}</h3><p><strong>Author:</strong> ${meta.author}</p><p><strong>Date:</strong> ${meta.date}</p><p>${meta.description}</p><hr style="margin:.6rem 0;border-color:var(--border-subtle);"><p style="opacity:.9;"><strong>Preview:</strong> ${sample ? sample.lostBook.text.slice(0,240) + '…' : 'No preview available.'}</p>`;
+        document.getElementById('bookModal').classList.add('open');
+        document.getElementById('bookModal').setAttribute('aria-hidden', 'false');
+    }
 });
 
 // Mobile/sidebar/help controls + keyboard shortcuts
@@ -740,6 +843,8 @@ const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('sidebarOverlay');
 const hamburger = document.getElementById('hamburger');
 const helpModal = document.getElementById('helpModal');
+const bookModal = document.getElementById('bookModal');
+const scrollTopBtn = document.getElementById('scrollTopBtn');
 
 function openSidebar() {
     sidebar.classList.add('open');
@@ -768,6 +873,13 @@ hamburger.addEventListener('click', () => {
 overlay.addEventListener('click', closeSidebar);
 document.getElementById('helpBtn').addEventListener('click', openHelp);
 helpModal.addEventListener('click', (e) => { if (e.target === helpModal) closeHelp(); });
+bookModal.addEventListener('click', (e) => { if (e.target === bookModal) { bookModal.classList.remove('open'); bookModal.setAttribute('aria-hidden','true'); } });
+
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 500) scrollTopBtn.classList.add('show');
+    else scrollTopBtn.classList.remove('show');
+});
+scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
 document.addEventListener('keydown', (e) => {
     if (e.key === '/') {
@@ -779,6 +891,8 @@ document.addEventListener('keydown', (e) => {
     } else if (e.key === 'Escape') {
         closeHelp();
         closeSidebar();
+        bookModal.classList.remove('open');
+        bookModal.setAttribute('aria-hidden', 'true');
     }
 });
 
