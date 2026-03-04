@@ -177,6 +177,16 @@
         .advanced-filters.open { display:block; }
         .filter-grid { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; }
         .filter-group { border:1px solid var(--border-subtle); border-radius:8px; padding:.45rem; }
+        .viz-section { margin: .75rem 0 1rem; display:grid; gap:.6rem; }
+        .viz-card { border:1px solid var(--border-subtle); border-radius:10px; padding:.65rem; background: rgba(212,168,83,0.04); }
+        .timeline-track { display:flex; gap:.5rem; overflow:auto; padding-bottom:.35rem; }
+        .timeline-item { min-width:180px; border:1px solid var(--border-subtle); border-radius:8px; padding:.45rem; font-size:.78rem; }
+        .map-wrap { width:100%; overflow:auto; }
+        .graph-node { fill:#d4a853; }
+        .graph-link { stroke:#7a5d24; opacity:.55; }
+        .progress-wrap { display:flex; align-items:center; gap:.5rem; }
+        .progress-bar { flex:1; height:10px; border-radius:999px; background:rgba(255,255,255,.12); overflow:hidden; }
+        .progress-fill { height:100%; width:0%; background:linear-gradient(90deg,#d4a853,#f4d03f); transition:width .2s ease; }
         #search {
             width: 100%; padding: 0.85rem 1rem;
             background: rgba(212, 168, 83, 0.05);
@@ -456,6 +466,96 @@
         }
         .sidebar-overlay.visible { display: block; }
 
+        .autocomplete-suggestions {
+            position: absolute;
+            background: var(--bg-card);
+            border: 1px solid var(--border-accent);
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+            z-index: 100;
+            width: calc(100% - 2rem);
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        .autocomplete-suggestion {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.9rem;
+        }
+        .autocomplete-suggestion:last-child {
+            border-bottom: none;
+        }
+        .autocomplete-suggestion:hover,
+        .autocomplete-suggestion.active {
+            background: rgba(212, 168, 83, 0.1);
+        }
+        .highlight {
+            background-color: rgba(212, 168, 83, 0.3);
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        .advanced-filters {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(212, 168, 83, 0.05);
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+        }
+        .advanced-filters h3 {
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--gold);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+        .filter-group {
+            margin-bottom: 1rem;
+        }
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        .filter-group input,
+        .filter-group select {
+            width: 100%;
+            padding: 0.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            color: var(--text-light);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+        }
+        .filter-group select[multiple] {
+            height: 80px;
+        }
+        .search-history {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+        .search-history h4 {
+            font-size: 0.8rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+        .search-history-item {
+            display: block;
+            padding: 0.3rem 0;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        .search-history-item:hover {
+            color: var(--gold-light);
+        }
+
         /* ── MOBILE ── */
         @media (max-width: 768px) {
             :root { --header-height: 56px; }
@@ -594,6 +694,32 @@
                 </div>
             </div>
         </section>
+        <section class="viz-section" aria-label="Visual discovery tools">
+            <div class="viz-card">
+                <strong>Interactive Timeline</strong>
+                <div id="timelineTrack" class="timeline-track"></div>
+            </div>
+            <div class="viz-card">
+                <strong>Geographical Map</strong>
+                <div class="map-wrap">
+                    <svg id="originMap" viewBox="0 0 600 220" style="width:100%;height:220px;border:1px solid var(--border-subtle);border-radius:8px;background:#121212;">
+                      <rect x="0" y="0" width="600" height="220" fill="#1b1b1b"></rect>
+                      <text x="12" y="20" fill="#a8a8a8" font-size="12">Origin map (symbolic)</text>
+                    </svg>
+                </div>
+            </div>
+            <div class="viz-card">
+                <strong>Relationship Graph</strong>
+                <svg id="relationshipGraph" viewBox="0 0 600 220" style="width:100%;height:220px;border:1px solid var(--border-subtle);border-radius:8px;background:#121212;"></svg>
+            </div>
+            <div class="viz-card">
+                <strong>Reading Progress</strong>
+                <div class="progress-wrap">
+                    <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+                    <span id="progressLabel" style="font-size:.78rem;min-width:70px;">0%</span>
+                </div>
+            </div>
+        </section>
         <div class="results-header" id="resultsHeader" aria-live="polite" role="status"></div>
         <div class="parallels-container" id="parallelsContainer"></div>
     </main>
@@ -704,6 +830,24 @@ while (parallels.length < 110) {
 }
 parallels.forEach(p => p.tags = [...new Set([p.theme.toLowerCase(), ...p.lostBook.name.toLowerCase().split(/\s+/).slice(0,2)])]);
 
+// Add dates to parallels for filtering
+parallels.forEach((p, index) => {
+  // Generate a date based on the index for demonstration purposes
+  const year = 2020 + Math.floor(index / 20);
+  const month = String(1 + (index % 12)).padStart(2, '0');
+  const day = String(1 + (index % 28)).padStart(2, '0');
+  p.date = `${year}-${month}-${day}`;
+  
+  // Add category based on book name
+  if (p.lostBook.name.includes('Enoch')) {
+    p.category = 'pseudepigrapha';
+  } else if (p.lostBook.name.includes('Dead Sea') || p.lostBook.name.includes('Scroll')) {
+    p.category = 'dead-sea-scrolls';
+  } else {
+    p.category = 'apocrypha';
+  }
+});
+
 // Build book and theme indexes
 const allBooks = [...new Set(parallels.map(p => p.lostBook.name))].sort();
 const allThemes = [...new Set(parallels.map(p => p.theme))].sort();
@@ -711,6 +855,11 @@ const allThemes = [...new Set(parallels.map(p => p.theme))].sort();
 let currentBook = 'all';
 let currentTheme = 'all';
 let currentSearch = '';
+let searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+let startDateFilter = '';
+let endDateFilter = '';
+let categoryFilter = 'all';
+let selectedThemeTags = [];
 let currentDateRange = 300;
 let currentCategories = new Set(['apocrypha','dss','gnostic']);
 let selectedThemeTags = new Set();
@@ -727,6 +876,68 @@ function inferCategory(p) {
 }
 function bookCount(book) { return parallels.filter(p => p.lostBook.name === book).length; }
 function themeCount(theme) { return parallels.filter(p => p.theme === theme).length; }
+
+// Autocomplete functions
+function getAutocompleteSuggestions(query) {
+    if (!query) return [];
+    
+    const suggestions = new Set();
+    const lowerQuery = query.toLowerCase();
+    
+    // Book names
+    parallels.forEach(p => {
+        if (p.lostBook.name.toLowerCase().includes(lowerQuery)) {
+            suggestions.add(p.lostBook.name);
+        }
+    });
+    
+    // Themes
+    parallels.forEach(p => {
+        if (p.theme.toLowerCase().includes(lowerQuery)) {
+            suggestions.add(p.theme);
+        }
+    });
+    
+    // Biblical references
+    parallels.forEach(p => {
+        if (p.bible.ref.toLowerCase().includes(lowerQuery) || p.lostBook.ref.toLowerCase().includes(lowerQuery)) {
+            suggestions.add(p.bible.ref);
+            suggestions.add(p.lostBook.ref);
+        }
+    });
+    
+    return Array.from(suggestions).slice(0, 10);
+}
+
+function showAutocompleteSuggestions(suggestions) {
+    const suggestionsContainer = document.getElementById('autocomplete-suggestions');
+    if (!suggestions.length) {
+        suggestionsContainer.style.display = 'none';
+        return;
+    }
+    
+    suggestionsContainer.innerHTML = '';
+    suggestions.forEach(suggestion => {
+        const div = document.createElement('div');
+        div.className = 'autocomplete-suggestion';
+        div.textContent = suggestion;
+        div.addEventListener('click', () => {
+            document.getElementById('search').value = suggestion;
+            suggestionsContainer.style.display = 'none';
+            currentSearch = suggestion;
+            render();
+        });
+        suggestionsContainer.appendChild(div);
+    });
+    
+    suggestionsContainer.style.display = 'block';
+}
+
+function highlightText(text, query) {
+    if (!query) return text;
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(regex, '<span class="highlight">$1</span>');
+}
 
 function buildSidebar() {
     const makeKeyboardAccessible = (el, action) => {
@@ -836,6 +1047,9 @@ function render() {
     const filtered = parallels.filter(matchesAllFilters);
 
     header.textContent = `${filtered.length} parallel${filtered.length !== 1 ? 's' : ''} found`;
+    renderTimeline(filtered);
+    renderMap(filtered);
+    renderGraph(filtered);
 
     if (filtered.length === 0) {
         container.innerHTML = '<div class="empty-state"><p>No parallels match your filters.</p></div>';
@@ -845,6 +1059,8 @@ function render() {
     filtered.forEach(p => {
         const card = document.createElement('div');
         card.className = 'parallel-card';
+        card.dataset.pid = String(p.id);
+        card.dataset.theme = p.theme;
         card.innerHTML = `
             <div class="card-header">
                 <div class="panel lost-book-panel">
@@ -874,6 +1090,64 @@ function render() {
             </div>`;
         container.appendChild(card);
     });
+    observeViewedCards();
+    updateProgress();
+}
+
+function getViewedSet() {
+  return new Set(JSON.parse(localStorage.getItem('viewedParallels') || '[]'));
+}
+function setViewedSet(set) {
+  localStorage.setItem('viewedParallels', JSON.stringify([...set]));
+}
+function updateProgress() {
+  const viewed = getViewedSet().size;
+  const total = parallels.length || 1;
+  const pct = Math.round((viewed / total) * 100);
+  document.getElementById('progressFill').style.width = `${pct}%`;
+  document.getElementById('progressLabel').textContent = `${pct}%`;
+}
+function renderTimeline(rows) {
+  const t = document.getElementById('timelineTrack');
+  const sample = rows.slice(0, 30).sort((a,b)=>parseEraScore(a.lostBook.ref)-parseEraScore(b.lostBook.ref));
+  t.innerHTML = sample.map(r => `<div class="timeline-item"><div style="color:var(--gold-light)">${r.lostBook.name}</div><div>${r.lostBook.ref}</div><div style="opacity:.8">${r.theme}</div></div>`).join('');
+}
+function originPoint(name) {
+  const n = name.toLowerCase();
+  if (n.includes('enoch') || n.includes('jubilees')) return {x:340,y:92,label:'Judea'};
+  if (n.includes('thomas') || n.includes('nag')) return {x:390,y:78,label:'Egypt'};
+  if (n.includes('wisdom')) return {x:365,y:68,label:'Alexandria'};
+  if (n.includes('ezra') || n.includes('baruch')) return {x:305,y:88,label:'Levant'};
+  return {x:330,y:85,label:'Near East'};
+}
+function renderMap(rows) {
+  const svg = document.getElementById('originMap');
+  const dots = rows.slice(0, 50).map(r => {
+    const p = originPoint(r.lostBook.name);
+    return `<circle cx="${p.x + Math.random()*40-20}" cy="${p.y + Math.random()*28-14}" r="3" fill="#d4a853"><title>${r.lostBook.name} (${p.label})</title></circle>`;
+  }).join('');
+  svg.innerHTML = `<rect x="0" y="0" width="600" height="220" fill="#1b1b1b"></rect><text x="12" y="20" fill="#a8a8a8" font-size="12">Origin map (symbolic clusters)</text>${dots}`;
+}
+function renderGraph(rows) {
+  const svg = document.getElementById('relationshipGraph');
+  const themes = [...new Set(rows.map(r=>r.theme))].slice(0,8);
+  const books = [...new Set(rows.map(r=>r.lostBook.name))].slice(0,8);
+  const nodes = [...themes.map((t,i)=>({id:t,x:100+i*60,y:60,type:'theme'})), ...books.map((b,i)=>({id:b,x:100+i*60,y:160,type:'book'}))];
+  const links = [];
+  rows.slice(0,80).forEach(r=>{ if(themes.includes(r.theme) && books.includes(r.lostBook.name)) links.push([r.theme,r.lostBook.name]); });
+  const map = Object.fromEntries(nodes.map(n=>[n.id,n]));
+  const lsvg = links.map(([a,b])=>`<line class="graph-link" x1="${map[a].x}" y1="${map[a].y}" x2="${map[b].x}" y2="${map[b].y}"/>`).join('');
+  const nsvg = nodes.map(n=>`<g><circle class="graph-node" cx="${n.x}" cy="${n.y}" r="${n.type==='theme'?7:6}"/><text x="${n.x+9}" y="${n.y+4}" fill="#d0d0d0" font-size="10">${n.id.slice(0,16)}</text></g>`).join('');
+  svg.innerHTML = lsvg + nsvg;
+}
+function observeViewedCards() {
+  const viewed = getViewedSet();
+  const obs = new IntersectionObserver((entries)=>{
+    let changed = false;
+    entries.forEach(en=>{ if(en.isIntersecting){ const id = Number(en.target.dataset.pid); if(!viewed.has(id)){ viewed.add(id); changed = true; } } });
+    if (changed) { setViewedSet(viewed); updateProgress(); }
+  }, {threshold: 0.65});
+  document.querySelectorAll('.parallel-card[data-pid]').forEach(c=>obs.observe(c));
 }
 
 function getFilteredParallels() {
