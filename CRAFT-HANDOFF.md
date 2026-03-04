@@ -1,46 +1,46 @@
 # CRAFT-HANDOFF.md
 
 ## Timestamp
-2026-03-04 09:00 PST
+2026-03-04 09:29 PST
 
 ## Current Task Status
-- **v13.0 completed and pushed**.
-- Added visual and mapping tools + reading progress tracker.
+- **v14.0 completed and pushed**.
+- Community features are now live in the Lost Books app.
 
-## What Was Completed in v13
-1. **Interactive timeline**
-   - Added horizontal-scroll timeline panel (`#timelineTrack`).
-   - Populates chronologically from current filtered results using ref-era score sorting.
+## What Was Completed in v14
+1. **Public profiles**
+   - Added Profile button (`#profileBtn`) and modal (`#profileModal`).
+   - Shows current user handle + their favorited parallels.
+   - Generates shareable profile URL hash (`#profile=<username>`).
 
-2. **Geographical map (symbolic SVG)**
-   - Added map panel (`#originMap`).
-   - Renders clustered origin dots based on inferred text origins (Judea/Egypt/Alexandria/Levant).
+2. **Comment threads**
+   - Added per-parallel comments UI and post input.
+   - Added one-level nested replies with timestamps.
+   - Persisted via localStorage (`parallelComments`).
 
-3. **Relationship graph (SVG)**
-   - Added graph panel (`#relationshipGraph`).
-   - Draws theme ↔ book nodes and links from active filtered parallels.
+3. **Vote/rank parallels**
+   - Added upvote button per parallel (`data-vote`).
+   - Stored vote totals in localStorage (`parallelVotes`).
+   - Added sort control (`#sortBy`) with popularity sort.
 
-4. **Reading progress tracker**
-   - Added progress bar (`#progressFill`, `#progressLabel`).
-   - Uses IntersectionObserver to mark viewed cards.
-   - Persists viewed ids in localStorage (`viewedParallels`).
-
-## Previous Milestones
-- v11.0: login mock, favorites, notes, expanded corpus, related links
-- v12.0: full-text search/highlight, advanced filters, history, autocomplete
+4. **Share collections**
+   - Added Collections button (`#collectionBtn`) and modal.
+   - Supports named collections saved to localStorage (`collections`).
+   - Generates shareable URL with encoded favorites payload (`#collection=...`).
+   - Auto-imports favorites from shared collection URL on load.
 
 ## Files Touched (this unit)
 - `/Users/matt/clawd/projects/lost-books/index.html`
 - `/Users/matt/clawd/projects/lost-books/CRAFT-HANDOFF.md`
 
 ## Git
-- Commit: `7ca9adb`
-- Message: `v13.0: timeline, origin map, relationship graph, and reading progress tracker`
+- Feature commit: `3f08250`
+- Message: `v14.0: public profiles, threaded comments, voting rank, and shareable collections`
 - Branch: `main`
 - Push: successful
 
-## Next Suggested Work
-1. v13.1 polish: add legend/tooltips + zoom/pan controls for map/graph.
-2. Improve timeline semantics with explicit metadata years instead of ref-number heuristics.
-3. Add reset for reading progress and per-user namespacing.
-4. Add keyboard accessibility for viz interactions.
+## Next Suggested Work (v14.1)
+1. Add moderation controls for comments (delete/report).
+2. Add public profile routing/render on `#profile=` deep links.
+3. Add vote anti-spam guard (per-user/per-day).
+4. Add collection landing page view and copy/share UX polish.
