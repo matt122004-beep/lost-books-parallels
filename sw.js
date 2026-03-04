@@ -1,8 +1,19 @@
-const CACHE_NAME = 'lost-books-v17';
-const ASSETS = ['./', './index.html', './css/print.css', './manifest.json'];
+const CACHE_NAME = 'lost-books-v20';
+const ASSETS = ['./', './index.html', './css/print.css', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-192-dark.png', './icons/icon-512-dark.png', './splash.png'];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
+  event.waitUntil(caches.open(CACHE_NAME).then(async (cache) => {
+    await cache.addAll(ASSETS);
+    // Pre-cache all parallels for offline reading
+    const resp = await fetch('./index.html');
+    const text = await resp.text();
+    const parallels = [...text.matchAll(/{ id:\d+, lostBook:{name:'([^']+)',ref:'([^']+)',text:'([^']+)'}[^}]+bible:{ref:'([^']+)',text:'([^']+)'}[^}]+theme:'([^']+)',notes:'([^']*)'}/g)];
+    const urls = parallels.flatMap((_, i) => [
+      `./parallel/${i}/lost.html`,
+      `./parallel/${i}/bible.html`
+    ]);
+    await cache.addAll(urls);
+  }));
   self.skipWaiting();
 });
 

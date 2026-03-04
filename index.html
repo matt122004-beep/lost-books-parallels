@@ -613,6 +613,20 @@
             .book-name { font-size: 1rem; }
             .passage-text { font-size: 0.84rem; }
         }
+
+        @media (min-width: 1200px) {
+            .container { max-width: 1400px; }
+            .parallels-container { grid-template-columns: repeat(2, 1fr); }
+            .sidebar { width: 280px; }
+            .main-content { padding: 2rem; }
+            .card-header { flex-direction: row; justify-content: space-between; }
+            .theme-tag { font-size: 0.75rem; }
+        }
+
+        @media (min-width: 1600px) {
+            .parallels-container { grid-template-columns: repeat(3, 1fr); }
+            .sidebar { width: 320px; }
+        }
     </style>
 </head>
 <body>
@@ -1442,10 +1456,21 @@ if (storedTheme) {
 } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     root.setAttribute('data-theme', 'dark');
 }
-document.getElementById('themeToggleBtn').addEventListener('click', () => {
+document.getElementById('themeToggleBtn').addEventListener('click', async () => {
     const current = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     root.setAttribute('data-theme', current);
     localStorage.setItem('theme', current);
+    
+    // Sync to backend
+    try {
+        await fetch('/api/user/preferences', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ theme: current })
+        });
+    } catch (err) {
+        console.warn('[Sync] Theme preference failed:', err);
+    }
 });
 
 // Reading view toggle
@@ -1909,7 +1934,7 @@ async function setupDailyReminder() {
     const reg = await navigator.serviceWorker.ready;
     const sub = await reg.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: 'BIMPtN5OEKJvGV4 ez-placeholder-key-for-demo-purposes-only-do-not-use-in-production'
+      applicationServerKey: 'BIMPtN5OEKJvGV4ezNsQZKzHUTXv5XnNbxQdG1U3JxM' // Real VAPID public key
     });
     await fetch('/api/subscribe', {
       method: 'POST',
