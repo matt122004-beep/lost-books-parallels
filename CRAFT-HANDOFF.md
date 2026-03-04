@@ -1,45 +1,42 @@
 # CRAFT-HANDOFF.md
 
 ## Timestamp
-2026-03-04 09:46 PST
+2026-03-04 09:58 PST
 
 ## Current Task Status
-- **v15.0 completed and pushed**.
-- Scholar-grade features added in-app.
+- **v16.0 completed and pushed**.
+- AI integration features implemented using local, client-side heuristic intelligence.
 
-## What Was Completed in v15
-1. **Source citation validation**
-   - Added per-parallel citation validation badge.
-   - Uses local whitelist map of known academic/accepted reference pairs.
-   - Flags non-whitelisted references as **Questionable citation**.
+## What Was Completed in v16
+1. **AI-generated related passages**
+   - Replaced related-passages logic in modal with similarity-based matching (`aiRelatedParallels`).
+   - Uses token overlap/Jaccard-style scoring across passage text + theme.
+   - Modal section now labeled **AI-generated Related Passages**.
 
-2. **Add new parallels (crowd-sourced + moderation queue)**
-   - Added Submit button (`#submitParallelBtn`) and submission modal.
-   - Added submission form for lost/bible refs+text, theme, notes.
-   - Stores pending items in localStorage (`submissionQueue`).
-   - Expert/admin users can approve queue items into active parallels.
+2. **Simplify complex themes**
+   - Added per-parallel **Simplify** action button.
+   - Generates plain-language explanation for selected parallel (`aiExplain`).
 
-3. **Expert reviewer badges**
-   - Added `verifiedScholars` list and badge renderer.
-   - Displays **Expert** badge next to verified users in comments/replies and queue display.
+3. **Study questions**
+   - Added per-parallel **Study Qs** button.
+   - Generates 3 guided reflection questions (`aiStudyQuestions`).
 
-4. **Version history (who/what/when)**
-   - Added local changelog store (`parallelHistory`).
-   - Tracks note edits, votes, comments, replies, deletions, approvals.
-   - Added per-parallel History button + modal view.
+4. **Personalized recommendations**
+   - Added recommendations card in visual section (`#aiRecommendations`).
+   - Uses reading history (`viewedParallels`) + dominant theme to suggest next parallels.
 
 ## Files Touched (this unit)
 - `/Users/matt/clawd/projects/lost-books/index.html`
 - `/Users/matt/clawd/projects/lost-books/CRAFT-HANDOFF.md`
 
 ## Git
-- Feature commit: `e077939`
-- Message: `v15.0: citation validation, submission queue, expert badges, and version history`
+- Feature commit: `f4f306c`
+- Message: `v16.0: AI related passages, simplification, study questions, and recommendations`
 - Branch: `main`
 - Push: successful
 
-## Next Suggested Work (v15.1)
-1. Replace whitelist heuristic with curated external citation dataset + confidence score.
-2. Add moderation dashboard filters (pending/reported/approved).
-3. Add immutable history snapshots for all field edits.
-4. Add role management UI for reviewer badge assignment.
+## Next Suggested Work (v16.1)
+1. Replace heuristic similarity with real embedding API (OpenAI or local model).
+2. Add confidence scores + rationale for each AI suggestion.
+3. Add per-user recommendation tuning (book/theme weighting controls).
+4. Cache AI outputs per parallel to reduce regeneration.
