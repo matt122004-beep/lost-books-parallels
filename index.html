@@ -726,6 +726,10 @@
                     <span id="progressLabel" style="font-size:.78rem;min-width:70px;">0%</span>
                 </div>
             </div>
+            <div class="viz-card">
+                <strong>AI Personalized Recommendations</strong>
+                <div id="aiRecommendations" style="font-size:.82rem;opacity:.92;margin-top:.3rem;">Read more parallels to get recommendations.</div>
+            </div>
         </section>
         <div class="results-header" id="resultsHeader" aria-live="polite" role="status"></div>
         <div class="parallels-container" id="parallelsContainer"></div>
@@ -1057,6 +1061,46 @@ function citationStatus(p) {
   const known = new Set(['Jude 14–15','Genesis 6:1–4','Daniel 7:9–14','Luke 16:22–26','Matthew 25:31–32','Exodus 31:12–17','Genesis 9:11–13','Matthew 7:7–8','Mark 4:30–32']);
   return known.has(p.bible.ref) ? 'validated' : 'questionable';
 }
+function aiTokens(txt='') {
+  return new Set(String(txt).toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w => w.length > 3));
+}
+function aiSimilarity(a, b) {
+  const A = aiTokens(a), B = aiTokens(b);
+  const inter = [...A].filter(x => B.has(x)).length;
+  const union = new Set([...A, ...B]).size || 1;
+  return inter / union;
+}
+function aiRelatedParallels(id, limit=3) {
+  const base = parallels.find(p => p.id === id);
+  if (!base) return [];
+  const text = `${base.lostBook.text} ${base.bible.text} ${base.theme}`;
+  return parallels
+    .filter(p => p.id !== id)
+    .map(p => ({ p, s: aiSimilarity(text, `${p.lostBook.text} ${p.bible.text} ${p.theme}`) }))
+    .sort((x,y) => y.s - x.s)
+    .slice(0, limit)
+    .map(x => x.p);
+}
+function aiExplain(p) {
+  return `Plain-language summary: This parallel connects ${p.lostBook.name} (${p.lostBook.ref}) with ${p.bible.ref} around the theme of ${p.theme}. Core idea: ${p.notes.slice(0,140)}.`;
+}
+function aiStudyQuestions(p) {
+  return [
+    `What single phrase is most similar between ${p.lostBook.ref} and ${p.bible.ref}?`,
+    `How does ${p.lostBook.name} expand or reinterpret the biblical passage?`,
+    `What theological theme (${p.theme}) would change if this parallel were removed?`
+  ];
+}
+function renderAIRecommendations() {
+  const viewed = [...getViewedSet()];
+  const root = document.getElementById('aiRecommendations');
+  if (!root) return;
+  if (!viewed.length) { root.textContent = 'Read more parallels to get recommendations.'; return; }
+  const themes = viewed.map(id => parallels.find(p=>p.id===id)?.theme).filter(Boolean);
+  const top = Object.entries(themes.reduce((a,t)=>(a[t]=(a[t]||0)+1,a),{})).sort((a,b)=>b[1]-a[1])[0]?.[0];
+  const recs = parallels.filter(p => p.theme === top && !viewed.includes(p.id)).slice(0,3);
+  root.innerHTML = recs.length ? recs.map(r => `<div>• ${r.lostBook.name} — ${r.lostBook.ref} (${r.theme})</div>`).join('') : 'No new recommendations yet.';
+}
 function renderComments(id) {
   const comments = getCommentsMap()[id] || [];
   return comments.map(c => `<div style="font-size:.74rem;margin:.2rem 0;padding:.2rem .35rem;border-left:2px solid var(--border-subtle)"><strong>${c.user||'guest'}</strong>${badge(c.user)} <span style="opacity:.6">${new Date(c.ts).toLocaleString()}</span><div>${c.text}</div>${(c.replies||[]).map(r=>`<div style='margin-left:.7rem;opacity:.9'>↳ ${r.user||'guest'}${badge(r.user)}: ${r.text}</div>`).join('')}<button class="copy-btn" data-reply="${id}:${c.id}">Reply</button> ${c.user===(getUser()?.login||'guest')?`<button class="copy-btn" data-del-comment="${id}:${c.id}">Delete</button>`:''} <button class="copy-btn" data-report-comment="${id}:${c.id}">Report</button></div>`).join('');
@@ -1101,6 +1145,7 @@ function render() {
     renderTimeline(filtered);
     renderMap(filtered);
     renderGraph(filtered);
+    renderAIRecommendations();
 
     if (filtered.length === 0) {
         container.innerHTML = '<div class="empty-state"><p>No parallels match your filters.</p></div>';
@@ -1139,8 +1184,11 @@ function render() {
                 <button class="copy-btn" data-cite="${p.id}">Copy Citations</button>
                 <button class="copy-btn" data-vote="${p.id}">▲ ${getVotes(p.id)}</button>
                 <button class="copy-btn" data-history="${p.id}">History</button>
+                <button class="copy-btn" data-ai-explain="${p.id}">Simplify</button>
+                <button class="copy-btn" data-ai-questions="${p.id}">Study Qs</button>
                 <button class="copy-btn fav-btn ${isFavorite(p.id) ? 'active' : ''}" data-fav="${p.id}">♥</button>
                 <textarea class="note-box" data-note-id="${p.id}" placeholder="Your note...">${getNote(p.id)}</textarea>
+                <div class="notes" data-ai-out="${p.id}" style="width:100%;font-size:.78rem;opacity:.95;"></div>
                 <div style="width:100%;margin-top:.35rem;">
                   <div style="font-size:.75rem;opacity:.85;margin-bottom:.2rem;">Comments</div>
                   <div class="comments" data-comments="${p.id}">${renderComments(p.id)}</div>
@@ -1457,6 +1505,26 @@ document.getElementById('parallelsContainer').addEventListener('click', async (e
         return;
     }
 
+    const explainBtn = e.target.closest('[data-ai-explain]');
+    if (explainBtn) {
+      const id = Number(explainBtn.dataset.aiExplain);
+      const p = parallels.find(x => x.id === id);
+      if (!p) return;
+      const out = document.querySelector(`[data-ai-out="${id}"]`);
+      if (out) out.textContent = aiExplain(p);
+      return;
+    }
+
+    const qsBtn = e.target.closest('[data-ai-questions]');
+    if (qsBtn) {
+      const id = Number(qsBtn.dataset.aiQuestions);
+      const p = parallels.find(x => x.id === id);
+      if (!p) return;
+      const out = document.querySelector(`[data-ai-out="${id}"]`);
+      if (out) out.innerHTML = aiStudyQuestions(p).map(q => `• ${q}`).join('<br>');
+      return;
+    }
+
     const favBtn = e.target.closest('[data-fav]');
     if (favBtn) {
         const id = Number(favBtn.dataset.fav);
@@ -1549,9 +1617,9 @@ document.getElementById('parallelsContainer').addEventListener('click', async (e
     if (card && !e.target.closest('button') && !e.target.closest('textarea')) {
       const refText = card.querySelector('.reference')?.textContent || '';
       const item = parallels.find(p => p.lostBook.ref === refText) || parallels[0];
-      const related = parallels.filter(p => p.id !== item.id && p.tags.some(t => item.tags.includes(t))).slice(0, 6);
+      const related = aiRelatedParallels(item.id, 6);
       const links = related.map(r => `<li><a href="#" data-jump="${r.id}" style="color:var(--gold-light)">${r.lostBook.name} — ${r.lostBook.ref}</a></li>`).join('');
-      document.getElementById('parallelModalContent').innerHTML = `<h3 style="color:var(--gold-light)">${item.lostBook.name} · ${item.lostBook.ref}</h3><p>${item.lostBook.text}</p><hr style="margin:.6rem 0;border-color:var(--border-subtle);"><p><strong>Related Parallels</strong></p><ul>${links || '<li>None</li>'}</ul>`;
+      document.getElementById('parallelModalContent').innerHTML = `<h3 style="color:var(--gold-light)">${item.lostBook.name} · ${item.lostBook.ref}</h3><p>${item.lostBook.text}</p><hr style="margin:.6rem 0;border-color:var(--border-subtle);"><p><strong>AI-generated Related Passages</strong></p><ul>${links || '<li>None</li>'}</ul>`;
       document.getElementById('parallelModal').classList.add('open');
       document.getElementById('parallelModal').setAttribute('aria-hidden','false');
     }
