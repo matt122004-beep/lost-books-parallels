@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0f1115">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-startup-image" href="splash.png">
     <title>Lost Books - Apocrypha &amp; Bible Parallels</title>
     <link rel="stylesheet" href="css/print.css" media="print">
     <style>
@@ -1065,6 +1068,22 @@ function getCommentsMap() {
 function saveCommentsMap(map) {
   localStorage.setItem('parallelComments', JSON.stringify(map));
 }
+function resolveConflicts(localKey, remoteData) {
+  const local = JSON.parse(localStorage.getItem(localKey) || '{}');
+  const merged = { ...local };
+  for (const [id, entries] of Object.entries(remoteData)) {
+    if (!merged[id]) {
+      merged[id] = entries;
+    } else {
+      // Simple last-write-wins by timestamp
+      const localMax = Math.max(...merged[id].map(c => c.ts));
+      const remoteMax = Math.max(...entries.map(c => c.ts));
+      if (remoteMax > localMax) merged[id] = entries;
+    }
+  }
+  localStorage.setItem(localKey, JSON.stringify(merged));
+  return merged;
+}
 const verifiedScholars = new Set(['matt122004-beep','dr-levi','prof-miriam']);
 const badge = (u) => verifiedScholars.has((u||'').toLowerCase()) ? ' <span style="font-size:.65rem;color:#f4d03f;border:1px solid #7a5d24;padding:1px 4px;border-radius:999px;">Expert</span>' : '';
 function addHistory(id, action, details='') {
@@ -1864,6 +1883,17 @@ async function simulateSync() {
   const sync = document.getElementById('syncStatus');
   if (!sync) return;
   sync.style.display = 'block';
+  
+  // Simulate fetching remote data
+  const remoteFavorites = {}; // Would come from /api/favorites
+  const remoteNotes = {};     // Would come from /api/notes
+  const remoteComments = {};  // Would come from /api/comments
+  
+  // Resolve conflicts
+  resolveConflicts('favorites', remoteFavorites);
+  resolveConflicts('userNotes', remoteNotes);
+  resolveConflicts('parallelComments', remoteComments);
+  
   await new Promise(r => setTimeout(r, 800));
   sync.style.display = 'none';
 }
@@ -1874,21 +1904,29 @@ async function setupDailyReminder() {
   if (Notification.permission === 'default') await Notification.requestPermission();
   if (Notification.permission !== 'granted') return;
 
-  // Simulate subscription endpoint registration
-  const simulateSubscribeEndpoint = async () => {
-    console.log('[Push] Simulated subscription registered');
+  // Register with real backend endpoint
+  async function registerSubscription() {
+    const reg = await navigator.serviceWorker.ready;
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: 'BIMPtN5OEKJvGV4 ez-placeholder-key-for-demo-purposes-only-do-not-use-in-production'
+    });
+    await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ endpoint: sub.endpoint, keys: sub.toJSON().keys })
+    });
     localStorage.setItem('pushSubscribed', 'true');
-  };
+  }
 
-  // Schedule via service worker periodic background sync (simulated)
+  // Try real subscription or fall back to localStorage
   if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-    navigator.serviceWorker.ready.then(reg => {
-      if (reg.periodicSync) {
-        reg.periodicSync.register('daily-reminder', { minInterval: 24 * 60 * 60 * 1000 })
-          .then(() => console.log('[Push] Periodic sync registered'))
-          .catch(err => console.warn('[Push] Periodic sync failed:', err));
-      } else {
-        // Fallback to localStorage-based daily check
+    const subscribed = localStorage.getItem('pushSubscribed') === 'true';
+    if (!subscribed) {
+      try {
+        await registerSubscription();
+      } catch (err) {
+        console.warn('[Push] Subscription failed, falling back to localStorage:', err);
         const last = Number(localStorage.getItem('lastReminderTs') || 0);
         const now = Date.now();
         if (now - last > 24*60*60*1000) {
@@ -1896,7 +1934,7 @@ async function setupDailyReminder() {
           localStorage.setItem('lastReminderTs', String(now));
         }
       }
-    });
+    }
   } else {
     // Fallback to localStorage-based daily check
     const last = Number(localStorage.getItem('lastReminderTs') || 0);
