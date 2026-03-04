@@ -85,6 +85,16 @@
         .header-right { text-align: right; }
         .subtitle { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase; }
         .stats { font-size: 0.75rem; color: var(--gold); font-weight: 500; }
+        .header-actions { margin-top: 0.35rem; display: flex; gap: 0.4rem; justify-content: flex-end; }
+        .action-btn {
+            background: rgba(212,168,83,0.12);
+            color: var(--gold-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 0.3rem 0.55rem;
+            font-size: 0.72rem;
+            cursor: pointer;
+        }
 
         /* ── LAYOUT ── */
         .container { display: flex; min-height: calc(100vh - var(--header-height)); position: relative; }
@@ -296,6 +306,34 @@
             letter-spacing: 0.03em;
             box-shadow: var(--shadow-sm);
         }
+        .copy-btn {
+            margin-left: auto;
+            background: rgba(212,168,83,0.12);
+            color: var(--gold-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 0.35rem 0.6rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        .help-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 300;
+            align-items: center;
+            justify-content: center;
+        }
+        .help-modal.open { display: flex; }
+        .help-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-accent);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            max-width: 420px;
+            width: calc(100% - 2rem);
+        }
         .notes { 
             font-family: var(--font-body);
             font-style: italic; 
@@ -399,6 +437,11 @@
     <div class="header-right">
         <div class="subtitle">Apocrypha &amp; Bible Parallels</div>
         <div class="stats" id="headerStats"></div>
+        <div class="header-actions">
+            <button class="action-btn" id="exportJsonBtn" title="Export JSON">JSON</button>
+            <button class="action-btn" id="exportCsvBtn" title="Export CSV">CSV</button>
+            <button class="action-btn" id="helpBtn" title="Keyboard help">?</button>
+        </div>
     </div>
 </header>
 <div class="container">
@@ -418,6 +461,15 @@
         <div class="results-header" id="resultsHeader" aria-live="polite" role="status"></div>
         <div class="parallels-container" id="parallelsContainer"></div>
     </main>
+</div>
+
+<div class="help-modal" id="helpModal" aria-hidden="true">
+  <div class="help-content">
+    <h3 style="margin-bottom:.6rem;color:var(--gold-light);">Keyboard Shortcuts</h3>
+    <p><strong>/</strong> Focus search</p>
+    <p><strong>?</strong> Open help modal</p>
+    <p><strong>Esc</strong> Close help/modal/sidebar</p>
+  </div>
 </div>
 <script>
 const parallels = [
@@ -612,15 +664,55 @@ function render() {
             <div class="card-footer">
                 <span class="theme-tag">${p.theme}</span>
                 <div class="notes parallel-meta">${p.notes}</div>
+                <button class="copy-btn" data-id="${p.id}">Copy</button>
             </div>`;
         container.appendChild(card);
     });
+}
+
+function getFilteredParallels() {
+    return parallels.filter(p => {
+        const bookMatch = currentBook === 'all' || p.lostBook.name === currentBook;
+        const themeMatch = currentTheme === 'all' || p.theme === currentTheme;
+        const q = currentSearch.toLowerCase();
+        const searchMatch = !q ||
+            p.lostBook.text.toLowerCase().includes(q) ||
+            p.bible.text.toLowerCase().includes(q) ||
+            p.lostBook.ref.toLowerCase().includes(q) ||
+            p.bible.ref.toLowerCase().includes(q) ||
+            p.theme.toLowerCase().includes(q) ||
+            p.notes.toLowerCase().includes(q);
+        return bookMatch && themeMatch && searchMatch;
+    });
+}
+
+function exportAsJson() {
+    const blob = new Blob([JSON.stringify(getFilteredParallels(), null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'lost-books-parallels.json';
+    a.click();
+}
+
+function exportAsCsv() {
+    const rows = getFilteredParallels();
+    const esc = (s) => `"${String(s).replace(/"/g, '""')}"`;
+    const header = ['id','lost_book','lost_ref','lost_text','bible_ref','bible_text','theme','notes'].join(',');
+    const body = rows.map(r => [r.id, r.lostBook.name, r.lostBook.ref, r.lostBook.text, r.bible.ref, r.bible.text, r.theme, r.notes].map(esc).join(',')).join('\n');
+    const blob = new Blob([header + '\n' + body], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'lost-books-parallels.csv';
+    a.click();
 }
 
 // Init
 buildSidebar();
 render();
 document.getElementById('headerStats').textContent = `${parallels.length} parallels · ${allBooks.length} books`;
+
+document.getElementById('exportJsonBtn').addEventListener('click', exportAsJson);
+document.getElementById('exportCsvBtn').addEventListener('click', exportAsCsv);
 
 let searchDebounceTimer;
 document.getElementById('search').addEventListener('input', e => {
@@ -631,10 +723,23 @@ document.getElementById('search').addEventListener('input', e => {
     }, 300);
 });
 
-// Mobile sidebar toggle
+document.getElementById('parallelsContainer').addEventListener('click', async (e) => {
+    const btn = e.target.closest('.copy-btn');
+    if (!btn) return;
+    const id = Number(btn.dataset.id);
+    const p = parallels.find(x => x.id === id);
+    if (!p) return;
+    const text = `${p.lostBook.name} (${p.lostBook.ref})\n${p.lostBook.text}\n\n${p.bible.ref}\n${p.bible.text}`;
+    await navigator.clipboard.writeText(text);
+    btn.textContent = 'Copied';
+    setTimeout(() => (btn.textContent = 'Copy'), 1200);
+});
+
+// Mobile/sidebar/help controls + keyboard shortcuts
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('sidebarOverlay');
 const hamburger = document.getElementById('hamburger');
+const helpModal = document.getElementById('helpModal');
 
 function openSidebar() {
     sidebar.classList.add('open');
@@ -648,10 +753,34 @@ function closeSidebar() {
     hamburger.textContent = '☰';
     document.body.style.overflow = '';
 }
+function openHelp() {
+    helpModal.classList.add('open');
+    helpModal.setAttribute('aria-hidden', 'false');
+}
+function closeHelp() {
+    helpModal.classList.remove('open');
+    helpModal.setAttribute('aria-hidden', 'true');
+}
+
 hamburger.addEventListener('click', () => {
     sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
 });
 overlay.addEventListener('click', closeSidebar);
+document.getElementById('helpBtn').addEventListener('click', openHelp);
+helpModal.addEventListener('click', (e) => { if (e.target === helpModal) closeHelp(); });
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === '/') {
+        e.preventDefault();
+        document.getElementById('search').focus();
+    } else if (e.key === '?') {
+        e.preventDefault();
+        openHelp();
+    } else if (e.key === 'Escape') {
+        closeHelp();
+        closeSidebar();
+    }
+});
 
 // Close sidebar when a filter is selected on mobile
 document.getElementById('bookList').addEventListener('click', () => {
