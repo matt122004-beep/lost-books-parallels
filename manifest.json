@@ -1,0 +1,21 @@
+{
+  "name": "Lost Books Parallels",
+  "short_name": "LostBooks",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f1115",
+  "theme_color": "#0f1115",
+  "description": "Apocrypha and Bible parallels study app",
+  "icons": [
+    {
+      "src": "https://dummyimage.com/192x192/0f1115/d4a853.png&text=LB",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://dummyimage.com/512x512/0f1115/d4a853.png&text=LB",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

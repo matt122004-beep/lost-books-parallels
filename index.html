@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f1115">
+    <link rel="manifest" href="manifest.json">
     <title>Lost Books - Apocrypha &amp; Bible Parallels</title>
     <link rel="stylesheet" href="css/print.css" media="print">
     <style>
@@ -130,6 +132,9 @@
             cursor: pointer;
         }
         .floating-btn.show { display: block; }
+        .bottom-nav { display:none; position:fixed; bottom:0; left:0; right:0; z-index:280; background:var(--bg-card); border-top:1px solid var(--border-subtle); padding:.5rem; justify-content:space-around; }
+        .bottom-nav button { background:transparent; border:1px solid var(--border-subtle); color:var(--text-light); border-radius:8px; padding:.45rem .65rem; }
+        .parallel-card.swiping { transform: translateX(10px); opacity:.92; transition: all .15s ease; }
         .book-modal { display:none; position:fixed; inset:0; z-index:320; background:rgba(0,0,0,.6); align-items:center; justify-content:center; }
         .book-modal.open { display:flex; }
         .book-modal-content { background: var(--bg-card); color: var(--text-light); border:1px solid var(--border-accent); border-radius:12px; width:min(680px,calc(100% - 2rem)); padding:1rem 1.2rem; }
@@ -592,6 +597,8 @@
                 padding: 0.9rem 1.25rem; 
             }
             .theme-tag { font-size: 0.7rem; padding: 0.25rem 0.7rem; }
+            .bottom-nav { display:flex; }
+            body { padding-bottom: 66px; }
         }
 
         @media (max-width: 480px) {
@@ -626,6 +633,7 @@
             <button class="action-btn" id="profileBtn" title="Public profile">Profile</button>
             <button class="action-btn" id="collectionBtn" title="Collections">Collections</button>
             <button class="action-btn" id="submitParallelBtn" title="Submit parallel">Submit</button>
+            <button class="action-btn" id="settingsBtn" title="Settings">⚙️</button>
             <button class="action-btn" id="helpBtn" title="Keyboard help">?</button>
         </div>
     </div>
@@ -736,6 +744,13 @@
     </main>
 </div>
 
+<nav class="bottom-nav" id="bottomNav" aria-label="Mobile navigation">
+  <button id="bnHome">Home</button>
+  <button id="bnSearch">Search</button>
+  <button id="bnFavs">Favorites</button>
+  <button id="bnInstall">Install</button>
+</nav>
+
 <div class="help-modal" id="helpModal" aria-hidden="true">
   <div class="help-content">
     <h3 style="margin-bottom:.6rem;color:var(--gold-light);">Keyboard Shortcuts</h3>
@@ -761,6 +776,9 @@
 </div>
 <div class="book-modal" id="historyModal" aria-hidden="true">
   <div class="book-modal-content" id="historyModalContent"></div>
+</div>
+<div class="book-modal" id="settingsModal" aria-hidden="true">
+  <div class="book-modal-content" id="settingsModalContent"></div>
 </div>
 <button class="floating-btn" id="scrollTopBtn" aria-label="Scroll to top">↑</button>
 <script>
@@ -1331,6 +1349,18 @@ document.getElementById('collectionBtn').addEventListener('click', () => {
   document.getElementById('collectionModal').setAttribute('aria-hidden','false');
 });
 
+document.getElementById('settingsBtn').addEventListener('click', () => {
+  const weights = JSON.parse(localStorage.getItem('themeWeights') || '{}');
+  const themes = [...new Set(parallels.map(p => p.theme))];
+  document.getElementById('settingsModalContent').innerHTML = `
+    <h3 style="color:var(--gold-light)">Settings</h3>
+    <h4>Theme Weights</h4>
+    <div style="display:grid;gap:.4rem;">${themes.map(t => `<label>${t} <input type="range" min="0" max="2" step="0.1" value="${weights[t]||1}" data-weight="${t}"></label>`).join('')}</div>
+    <button class="action-btn" id="saveWeights">Save</button>`;
+  document.getElementById('settingsModal').classList.add('open');
+  document.getElementById('settingsModal').setAttribute('aria-hidden','false');
+});
+
 document.getElementById('submitParallelBtn').addEventListener('click', () => {
   const queue = JSON.parse(localStorage.getItem('submissionQueue') || '[]');
   const isAdmin = verifiedScholars.has((getUser()?.login||'').toLowerCase());
@@ -1636,6 +1666,14 @@ document.getElementById('parallelsContainer').addEventListener('input', (e) => {
 });
 
 document.addEventListener('click', (e) => {
+  if (e.target.id === 'saveWeights') {
+    const weights = {};
+    document.querySelectorAll('[data-weight]').forEach(el => weights[el.dataset.weight] = Number(el.value));
+    localStorage.setItem('themeWeights', JSON.stringify(weights));
+    document.getElementById('settingsModal').classList.remove('open');
+    document.getElementById('settingsModal').setAttribute('aria-hidden','true');
+    render();
+  }
   if (e.target.id === 'submitParallelConfirm') {
     const item = {
       id: Date.now(),
@@ -1679,6 +1717,7 @@ const profileModal = document.getElementById('profileModal');
 const collectionModal = document.getElementById('collectionModal');
 const submitModal = document.getElementById('submitModal');
 const historyModal = document.getElementById('historyModal');
+const settingsModal = document.getElementById('settingsModal');
 const scrollTopBtn = document.getElementById('scrollTopBtn');
 
 function openSidebar() {
@@ -1713,6 +1752,7 @@ profileModal.addEventListener('click', (e) => { if (e.target === profileModal) {
 collectionModal.addEventListener('click', (e) => { if (e.target === collectionModal) { collectionModal.classList.remove('open'); collectionModal.setAttribute('aria-hidden','true'); } });
 submitModal.addEventListener('click', (e) => { if (e.target === submitModal) { submitModal.classList.remove('open'); submitModal.setAttribute('aria-hidden','true'); } });
 historyModal.addEventListener('click', (e) => { if (e.target === historyModal) { historyModal.classList.remove('open'); historyModal.setAttribute('aria-hidden','true'); } });
+settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) { settingsModal.classList.remove('open'); settingsModal.setAttribute('aria-hidden','true'); } });
 parallelModal.addEventListener('click', (e) => {
   if (e.target === parallelModal) {
     parallelModal.classList.remove('open');
@@ -1756,6 +1796,8 @@ document.addEventListener('keydown', (e) => {
         submitModal.setAttribute('aria-hidden', 'true');
         historyModal.classList.remove('open');
         historyModal.setAttribute('aria-hidden', 'true');
+        settingsModal.classList.remove('open');
+        settingsModal.setAttribute('aria-hidden', 'true');
     }
 });
 
@@ -1765,6 +1807,70 @@ document.getElementById('bookList').addEventListener('click', () => {
 });
 document.getElementById('themeList').addEventListener('click', () => {
     if (window.innerWidth <= 768) closeSidebar();
+});
+
+// v17: PWA + install + notifications + touch mobile UX
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+
+let deferredInstallPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  const b = document.getElementById('bnInstall');
+  if (b) b.style.display = 'inline-block';
+});
+
+document.getElementById('bnInstall')?.addEventListener('click', async () => {
+  if (!deferredInstallPrompt) return alert('Install prompt not available yet.');
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+});
+
+document.getElementById('bnHome')?.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+document.getElementById('bnSearch')?.addEventListener('click', () => document.getElementById('searchMain')?.focus());
+document.getElementById('bnFavs')?.addEventListener('click', () => {
+  const favs = new Set(getFavorites());
+  document.querySelectorAll('.parallel-card').forEach(card => {
+    const id = Number(card.dataset.pid);
+    card.style.display = favs.has(id) ? '' : 'none';
+  });
+});
+
+async function setupDailyReminder() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') await Notification.requestPermission();
+  if (Notification.permission !== 'granted') return;
+  const last = Number(localStorage.getItem('lastReminderTs') || 0);
+  const now = Date.now();
+  if (now - last > 24*60*60*1000) {
+    new Notification('Lost Books Daily Reading', { body: 'Open a new parallel and continue your study today.' });
+    localStorage.setItem('lastReminderTs', String(now));
+  }
+}
+setupDailyReminder();
+
+let touchStartX = 0;
+document.getElementById('parallelsContainer').addEventListener('touchstart', (e) => {
+  touchStartX = e.changedTouches[0].clientX;
+});
+document.getElementById('parallelsContainer').addEventListener('touchend', (e) => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const card = e.target.closest('.parallel-card');
+  if (!card) return;
+  if (Math.abs(dx) > 45) {
+    card.classList.add('swiping');
+    setTimeout(() => card.classList.remove('swiping'), 220);
+    if (dx > 0) {
+      const id = Number(card.dataset.pid);
+      const favs = new Set(getFavorites());
+      favs.add(id);
+      localStorage.setItem('favorites', JSON.stringify([...favs]));
+      render();
+    }
+  }
 });
 </script>
 </body>
