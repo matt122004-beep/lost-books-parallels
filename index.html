@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lost Books - Apocrypha &amp; Bible Parallels</title>
+    <link rel="stylesheet" href="css/print.css" media="print">
     <style>
         /* Premium Design System */
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
@@ -298,10 +299,27 @@
         .notes { 
             font-family: var(--font-body);
             font-style: italic; 
-            opacity: 0.8; 
             font-size: 0.85rem; 
             line-height: 1.5; 
-            color: var(--text-dim);
+            color: #a8a8a8; /* WCAG AA compliant */
+        }
+        
+        /* Visually hidden skip link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--gold);
+            color: var(--bg-dark);
+            padding: 8px;
+            font-weight: bold;
+            font-family: var(--font-body);
+            text-decoration: none;
+            z-index: 1000;
+            transition: top 0.3s;
+        }
+        .skip-link:focus {
+            top: 0;
         }
         .empty-state { 
             text-align: center; 
@@ -368,6 +386,7 @@
     </style>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Skip to content</a>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <header>
     <div class="header-left">

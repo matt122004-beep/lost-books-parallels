@@ -1,0 +1,179 @@
+@media print {
+    /* Reset and base styles */
+    body { 
+        background: #fff; 
+        color: #000; 
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        font-size: 12pt;
+        line-height: 1.4;
+        margin: 0;
+        padding: 0;
+    }
+    
+    /* Hide non-essential elements */
+    .sidebar, .hamburger, .sidebar-overlay, .skip-link, .header-right {
+        display: none !important;
+    }
+    
+    /* Header adjustments */
+    header {
+        position: static;
+        background: #fff;
+        border-bottom: 1px solid #ccc;
+        box-shadow: none;
+        padding: 1rem 0;
+        margin-bottom: 2rem;
+    }
+    
+    h1 {
+        color: #000;
+        font-size: 24pt;
+        text-align: center;
+        margin: 0;
+        font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+    
+    /* Main content */
+    .main-content {
+        padding: 0 1rem;
+        max-width: 100%;
+    }
+    
+    /* Results header */
+    .results-header {
+        color: #000;
+        border-bottom: 1px solid #ccc;
+        font-size: 14pt;
+        padding: 1rem 0;
+        margin-bottom: 1.5rem;
+        font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+    
+    /* Parallel cards */
+    .parallels-container {
+        gap: 2rem;
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+    
+    .parallel-card {
+        background: #fff;
+        border: 1px solid #ccc;
+        box-shadow: none;
+        break-inside: avoid;
+        margin-bottom: 2rem;
+        page-break-inside: avoid;
+    }
+    
+    .parallel-card:hover {
+        transform: none;
+    }
+    
+    /* Card header */
+    .card-header {
+        border-bottom: 1px solid #ccc;
+    }
+    
+    .panel {
+        padding: 1.5rem;
+    }
+    
+    .lost-book-panel {
+        border-right: none;
+        border-bottom: 1px solid #ccc;
+    }
+    
+    /* Panel labels */
+    .panel-label {
+        color: #333;
+        font-size: 10pt;
+        margin-bottom: 0.5rem;
+        font-family: Arial, sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    /* References */
+    .reference {
+        color: #555;
+        font-family: 'Courier New', monospace;
+        font-size: 11pt;
+        margin-bottom: 0.7rem;
+    }
+    
+    /* Book names */
+    .book-name {
+        color: #000;
+        font-size: 14pt;
+        margin-bottom: 0.5rem;
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-style: italic;
+    }
+    
+    /* Passage text */
+    .passage-text {
+        color: #000;
+        font-size: 12pt;
+        line-height: 1.5;
+    }
+    
+    /* Card footer */
+    .card-footer {
+        border-top: 1px solid #ccc;
+        background: transparent;
+        padding: 1rem 1.5rem;
+    }
+    
+    /* Theme tags */
+    .theme-tag {
+        background: #eee;
+        color: #000;
+        font-size: 10pt;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+    }
+    
+    /* Notes */
+    .notes {
+        color: #333;
+        font-size: 11pt;
+        font-style: italic;
+        line-height: 1.4;
+    }
+    
+    /* Empty state */
+    .empty-state {
+        color: #333;
+        text-align: center;
+        padding: 3rem;
+    }
+    
+    /* Page breaks */
+    .parallel-card {
+        page-break-inside: avoid;
+    }
+    
+    /* Adjust for mobile layout */
+    @media (max-width: 768px) {
+        .card-header {
+            flex-direction: column;
+        }
+        
+        .lost-book-panel {
+            border-right: none;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        .card-footer {
+            flex-direction: column;
+        }
+    }
+    
+    /* Ensure good print quality */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+}
