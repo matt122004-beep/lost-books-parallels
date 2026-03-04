@@ -623,6 +623,8 @@
             <button class="action-btn" id="readingToggleBtn" title="Toggle reading view">Read</button>
             <button class="action-btn" id="exportJsonBtn" title="Export JSON">JSON</button>
             <button class="action-btn" id="exportCsvBtn" title="Export CSV">CSV</button>
+            <button class="action-btn" id="profileBtn" title="Public profile">Profile</button>
+            <button class="action-btn" id="collectionBtn" title="Collections">Collections</button>
             <button class="action-btn" id="helpBtn" title="Keyboard help">?</button>
         </div>
     </div>
@@ -670,6 +672,10 @@
         <section class="search-hub" aria-label="Search and discovery">
             <div class="search-row">
                 <input type="text" id="searchMain" placeholder="Search full text, references, themes…" aria-label="Search full text">
+                <select id="sortBy" class="action-btn" aria-label="Sort results">
+                  <option value="relevance">Relevance</option>
+                  <option value="popular">Popularity</option>
+                </select>
                 <button class="action-btn" id="toggleFiltersBtn">Filters</button>
             </div>
             <div id="autocompleteList" class="autocomplete-list"></div>
@@ -738,6 +744,12 @@
 </div>
 <div class="book-modal" id="parallelModal" aria-hidden="true">
   <div class="book-modal-content" id="parallelModalContent"></div>
+</div>
+<div class="book-modal" id="profileModal" aria-hidden="true">
+  <div class="book-modal-content" id="profileModalContent"></div>
+</div>
+<div class="book-modal" id="collectionModal" aria-hidden="true">
+  <div class="book-modal-content" id="collectionModalContent"></div>
 </div>
 <button class="floating-btn" id="scrollTopBtn" aria-label="Scroll to top">↑</button>
 <script>
@@ -855,11 +867,7 @@ const allThemes = [...new Set(parallels.map(p => p.theme))].sort();
 let currentBook = 'all';
 let currentTheme = 'all';
 let currentSearch = '';
-let searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-let startDateFilter = '';
-let endDateFilter = '';
-let categoryFilter = 'all';
-let selectedThemeTags = [];
+let currentSort = 'relevance';
 let currentDateRange = 300;
 let currentCategories = new Set(['apocrypha','dss','gnostic']);
 let selectedThemeTags = new Set();
@@ -1011,6 +1019,25 @@ function getNote(id) {
   const notes = JSON.parse(localStorage.getItem('userNotes') || '{}');
   return notes[id] || '';
 }
+function getVotes(id) {
+  const votes = JSON.parse(localStorage.getItem('parallelVotes') || '{}');
+  return votes[id] || 0;
+}
+function vote(id) {
+  const votes = JSON.parse(localStorage.getItem('parallelVotes') || '{}');
+  votes[id] = (votes[id] || 0) + 1;
+  localStorage.setItem('parallelVotes', JSON.stringify(votes));
+}
+function getCommentsMap() {
+  return JSON.parse(localStorage.getItem('parallelComments') || '{}');
+}
+function saveCommentsMap(map) {
+  localStorage.setItem('parallelComments', JSON.stringify(map));
+}
+function renderComments(id) {
+  const comments = getCommentsMap()[id] || [];
+  return comments.map(c => `<div style="font-size:.74rem;margin:.2rem 0;padding:.2rem .35rem;border-left:2px solid var(--border-subtle)"><strong>${c.user||'guest'}</strong> <span style="opacity:.6">${new Date(c.ts).toLocaleString()}</span><div>${c.text}</div>${(c.replies||[]).map(r=>`<div style='margin-left:.7rem;opacity:.9'>↳ ${r.user||'guest'}: ${r.text}</div>`).join('')}<button class="copy-btn" data-reply="${id}:${c.id}">Reply</button></div>`).join('');
+}
 
 function getSearchHistory() {
   return JSON.parse(localStorage.getItem('searchHistory') || '[]');
@@ -1045,6 +1072,7 @@ function render() {
     container.innerHTML = '';
 
     const filtered = parallels.filter(matchesAllFilters);
+    if (currentSort === 'popular') filtered.sort((a,b) => getVotes(b.id) - getVotes(a.id));
 
     header.textContent = `${filtered.length} parallel${filtered.length !== 1 ? 's' : ''} found`;
     renderTimeline(filtered);
@@ -1085,8 +1113,15 @@ function render() {
                 </div>
                 <button class="copy-btn" data-id="${p.id}">Copy</button>
                 <button class="copy-btn" data-cite="${p.id}">Copy Citations</button>
+                <button class="copy-btn" data-vote="${p.id}">▲ ${getVotes(p.id)}</button>
                 <button class="copy-btn fav-btn ${isFavorite(p.id) ? 'active' : ''}" data-fav="${p.id}">♥</button>
                 <textarea class="note-box" data-note-id="${p.id}" placeholder="Your note...">${getNote(p.id)}</textarea>
+                <div style="width:100%;margin-top:.35rem;">
+                  <div style="font-size:.75rem;opacity:.85;margin-bottom:.2rem;">Comments</div>
+                  <div class="comments" data-comments="${p.id}">${renderComments(p.id)}</div>
+                  <input class="note-box" style="min-height:unset;height:36px;" data-comment-input="${p.id}" placeholder="Add comment…">
+                  <button class="copy-btn" data-comment-submit="${p.id}">Post</button>
+                </div>
             </div>`;
         container.appendChild(card);
     });
@@ -1199,6 +1234,38 @@ refreshUserStatus();
 
 document.getElementById('exportJsonBtn').addEventListener('click', exportAsJson);
 document.getElementById('exportCsvBtn').addEventListener('click', exportAsCsv);
+document.getElementById('sortBy').addEventListener('change', (e) => { currentSort = e.target.value; render(); });
+
+document.getElementById('profileBtn').addEventListener('click', () => {
+  const u = getUser() || {login:'guest'};
+  const favs = getFavorites().map(id => parallels.find(p => p.id === id)).filter(Boolean);
+  const share = `${location.origin}${location.pathname}#profile=${encodeURIComponent(u.login)}`;
+  document.getElementById('profileModalContent').innerHTML = `<h3 style="color:var(--gold-light)">@${u.login}</h3><p>Favorites: ${favs.length}</p><ul>${favs.slice(0,20).map(f=>`<li>${f.lostBook.name} — ${f.lostBook.ref}</li>`).join('')}</ul><p><input value="${share}" style="width:100%"></p>`;
+  document.getElementById('profileModal').classList.add('open');
+  document.getElementById('profileModal').setAttribute('aria-hidden','false');
+});
+
+document.getElementById('collectionBtn').addEventListener('click', () => {
+  const name = prompt('Collection name:', 'My Favorites');
+  if (!name) return;
+  const collections = JSON.parse(localStorage.getItem('collections') || '{}');
+  collections[name] = getFavorites();
+  localStorage.setItem('collections', JSON.stringify(collections));
+  const payload = encodeURIComponent(btoa(JSON.stringify({name, ids: collections[name]})));
+  const share = `${location.origin}${location.pathname}#collection=${payload}`;
+  document.getElementById('collectionModalContent').innerHTML = `<h3 style="color:var(--gold-light)">Collection saved</h3><p><strong>${name}</strong> (${collections[name].length} items)</p><p><input value="${share}" style="width:100%"></p>`;
+  document.getElementById('collectionModal').classList.add('open');
+  document.getElementById('collectionModal').setAttribute('aria-hidden','false');
+});
+
+(function importSharedCollection(){
+  const m = location.hash.match(/collection=([^&]+)/);
+  if (!m) return;
+  try {
+    const parsed = JSON.parse(atob(decodeURIComponent(m[1])));
+    if (Array.isArray(parsed.ids)) localStorage.setItem('favorites', JSON.stringify(parsed.ids));
+  } catch {}
+})();
 
 // Advanced filters
 const adv = document.getElementById('advancedFilters');
@@ -1324,6 +1391,14 @@ document.getElementById('parallelsContainer').addEventListener('click', async (e
         return;
     }
 
+    const voteBtn = e.target.closest('[data-vote]');
+    if (voteBtn) {
+        const id = Number(voteBtn.dataset.vote);
+        vote(id);
+        render();
+        return;
+    }
+
     const favBtn = e.target.closest('[data-fav]');
     if (favBtn) {
         const id = Number(favBtn.dataset.fav);
@@ -1332,6 +1407,38 @@ document.getElementById('parallelsContainer').addEventListener('click', async (e
         localStorage.setItem('favorites', JSON.stringify([...favs]));
         favBtn.classList.toggle('active');
         return;
+    }
+
+    const postBtn = e.target.closest('[data-comment-submit]');
+    if (postBtn) {
+      const id = Number(postBtn.dataset.commentSubmit);
+      const input = document.querySelector(`[data-comment-input="${id}"]`);
+      if (!input || !input.value.trim()) return;
+      const map = getCommentsMap();
+      const row = map[id] || [];
+      row.push({ id: Date.now(), user: (getUser()?.login || 'guest'), text: input.value.trim(), ts: Date.now(), replies: [] });
+      map[id] = row;
+      saveCommentsMap(map);
+      input.value = '';
+      render();
+      return;
+    }
+
+    const replyBtn = e.target.closest('[data-reply]');
+    if (replyBtn) {
+      const [pid,cid] = replyBtn.dataset.reply.split(':').map(Number);
+      const txt = prompt('Reply:');
+      if (!txt) return;
+      const map = getCommentsMap();
+      const row = map[pid] || [];
+      const parent = row.find(c => c.id === cid);
+      if (parent) {
+        parent.replies = parent.replies || [];
+        parent.replies.push({ user: (getUser()?.login || 'guest'), text: txt, ts: Date.now() });
+        saveCommentsMap(map);
+        render();
+      }
+      return;
     }
 
     const btn = e.target.closest('[data-id]');
@@ -1385,6 +1492,8 @@ const hamburger = document.getElementById('hamburger');
 const helpModal = document.getElementById('helpModal');
 const bookModal = document.getElementById('bookModal');
 const parallelModal = document.getElementById('parallelModal');
+const profileModal = document.getElementById('profileModal');
+const collectionModal = document.getElementById('collectionModal');
 const scrollTopBtn = document.getElementById('scrollTopBtn');
 
 function openSidebar() {
@@ -1415,6 +1524,8 @@ overlay.addEventListener('click', closeSidebar);
 document.getElementById('helpBtn').addEventListener('click', openHelp);
 helpModal.addEventListener('click', (e) => { if (e.target === helpModal) closeHelp(); });
 bookModal.addEventListener('click', (e) => { if (e.target === bookModal) { bookModal.classList.remove('open'); bookModal.setAttribute('aria-hidden','true'); } });
+profileModal.addEventListener('click', (e) => { if (e.target === profileModal) { profileModal.classList.remove('open'); profileModal.setAttribute('aria-hidden','true'); } });
+collectionModal.addEventListener('click', (e) => { if (e.target === collectionModal) { collectionModal.classList.remove('open'); collectionModal.setAttribute('aria-hidden','true'); } });
 parallelModal.addEventListener('click', (e) => {
   if (e.target === parallelModal) {
     parallelModal.classList.remove('open');
@@ -1450,6 +1561,10 @@ document.addEventListener('keydown', (e) => {
         bookModal.setAttribute('aria-hidden', 'true');
         parallelModal.classList.remove('open');
         parallelModal.setAttribute('aria-hidden', 'true');
+        profileModal.classList.remove('open');
+        profileModal.setAttribute('aria-hidden', 'true');
+        collectionModal.classList.remove('open');
+        collectionModal.setAttribute('aria-hidden', 'true');
     }
 });
 
