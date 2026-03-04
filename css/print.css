@@ -136,7 +136,8 @@
     }
     
     /* Notes */
-    .notes {
+    .notes,
+    .parallel-meta {
         color: #333;
         font-size: 11pt;
         font-style: italic;

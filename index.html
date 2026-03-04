@@ -303,6 +303,9 @@
             line-height: 1.5; 
             color: #a8a8a8; /* WCAG AA compliant */
         }
+        .parallel-meta {
+            color: #a8a8a8;
+        }
         
         /* Visually hidden skip link */
         .skip-link {
@@ -608,7 +611,7 @@ function render() {
             </div>
             <div class="card-footer">
                 <span class="theme-tag">${p.theme}</span>
-                <div class="notes">${p.notes}</div>
+                <div class="notes parallel-meta">${p.notes}</div>
             </div>`;
         container.appendChild(card);
     });
