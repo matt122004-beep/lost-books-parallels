@@ -149,6 +149,34 @@
             box-shadow: inset -1px 0 0 var(--border-subtle);
         }
         .search-container { margin-bottom: 1.75rem; }
+        .search-hub {
+            margin-bottom: 1rem;
+            background: rgba(212,168,83,0.06);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 0.8rem;
+            position: sticky;
+            top: calc(var(--header-height) + 10px);
+            z-index: 80;
+        }
+        .search-row { display:flex; gap:.5rem; align-items:center; }
+        .autocomplete-list {
+            margin-top: .35rem;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            background: var(--bg-card);
+            max-height: 180px;
+            overflow:auto;
+            display:none;
+        }
+        .autocomplete-item { padding:.45rem .6rem; cursor:pointer; font-size:.85rem; }
+        .autocomplete-item:hover { background: rgba(212,168,83,0.08); }
+        .history-row { margin-top:.45rem; display:flex; gap:.35rem; flex-wrap:wrap; }
+        .history-chip { font-size:.72rem; padding:.2rem .5rem; border:1px solid var(--border-subtle); border-radius:999px; cursor:pointer; }
+        .advanced-filters { margin-top:.55rem; display:none; }
+        .advanced-filters.open { display:block; }
+        .filter-grid { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; }
+        .filter-group { border:1px solid var(--border-subtle); border-radius:8px; padding:.45rem; }
         #search {
             width: 100%; padding: 0.85rem 1rem;
             background: rgba(212, 168, 83, 0.05);
@@ -503,7 +531,33 @@
     <aside class="sidebar" id="sidebar" aria-label="Filters">
         <div class="search-container">
             <label id="search-label" for="search" style="display: none;">Search parallels</label>
-            <input type="text" id="search" placeholder="Search parallels…" aria-label="Search parallels">
+            <input type="text" id="search" placeholder="Search parallels…" aria-label="Search parallels" autocomplete="off">
+            <div id="autocomplete-suggestions" class="autocomplete-suggestions"></div>
+        </div>
+        <div class="advanced-filters">
+            <h3>Advanced Filters</h3>
+            <div class="filter-group">
+                <label for="date-range-start">Date Range:</label>
+                <input type="date" id="date-range-start" placeholder="Start date">
+                <input type="date" id="date-range-end" placeholder="End date">
+            </div>
+            <div class="filter-group">
+                <label for="category-filter">Category:</label>
+                <select id="category-filter">
+                    <option value="all">All Categories</option>
+                    <option value="apocrypha">Apocrypha</option>
+                    <option value="pseudepigrapha">Pseudepigrapha</option>
+                    <option value="dead-sea-scrolls">Dead Sea Scrolls</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="theme-tags">Theme Tags:</label>
+                <select id="theme-tags" multiple>
+                    <!-- Will be populated dynamically -->
+                </select>
+            </div>
+            <button id="apply-filters" class="action-btn">Apply Filters</button>
+            <button id="clear-filters" class="action-btn">Clear Filters</button>
         </div>
         <h3>Books</h3>
         <ul class="book-list" id="bookList"></ul>
@@ -513,6 +567,33 @@
         </div>
     </aside>
     <main class="main-content" id="main-content">
+        <section class="search-hub" aria-label="Search and discovery">
+            <div class="search-row">
+                <input type="text" id="searchMain" placeholder="Search full text, references, themes…" aria-label="Search full text">
+                <button class="action-btn" id="toggleFiltersBtn">Filters</button>
+            </div>
+            <div id="autocompleteList" class="autocomplete-list"></div>
+            <div id="searchHistory" class="history-row"></div>
+            <div id="advancedFilters" class="advanced-filters">
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label for="dateRange"><strong>Date range</strong></label>
+                        <input type="range" id="dateRange" min="0" max="300" value="300">
+                        <div id="dateRangeLabel" style="font-size:.75rem;opacity:.85;">All eras</div>
+                    </div>
+                    <div class="filter-group">
+                        <strong>Book categories</strong>
+                        <label style="display:block;font-size:.8rem;"><input type="checkbox" class="cat-filter" value="apocrypha" checked> Apocrypha</label>
+                        <label style="display:block;font-size:.8rem;"><input type="checkbox" class="cat-filter" value="dss" checked> Dead Sea Scrolls</label>
+                        <label style="display:block;font-size:.8rem;"><input type="checkbox" class="cat-filter" value="gnostic" checked> Gnostic / Nag Hammadi</label>
+                    </div>
+                    <div class="filter-group" style="grid-column: 1 / span 2;">
+                        <label for="themeMulti"><strong>Theme tags</strong></label>
+                        <select id="themeMulti" multiple style="width:100%;min-height:76px;"></select>
+                    </div>
+                </div>
+            </div>
+        </section>
         <div class="results-header" id="resultsHeader" aria-live="polite" role="status"></div>
         <div class="parallels-container" id="parallelsContainer"></div>
     </main>
@@ -630,7 +711,20 @@ const allThemes = [...new Set(parallels.map(p => p.theme))].sort();
 let currentBook = 'all';
 let currentTheme = 'all';
 let currentSearch = '';
+let currentDateRange = 300;
+let currentCategories = new Set(['apocrypha','dss','gnostic']);
+let selectedThemeTags = new Set();
 
+function parseEraScore(ref='') {
+  const m = ref.match(/(\d+)/);
+  return m ? Number(m[1]) : 150;
+}
+function inferCategory(p) {
+  const n = p.lostBook.name.toLowerCase();
+  if (n.includes('community rule') || n.includes('war scroll') || n.includes('thanksgiving') || n.includes('damascus')) return 'dss';
+  if (n.includes('thomas') || n.includes('peter') || n.includes('nag')) return 'gnostic';
+  return 'apocrypha';
+}
 function bookCount(book) { return parallels.filter(p => p.lostBook.name === book).length; }
 function themeCount(theme) { return parallels.filter(p => p.theme === theme).length; }
 
@@ -707,24 +801,39 @@ function getNote(id) {
   return notes[id] || '';
 }
 
+function getSearchHistory() {
+  return JSON.parse(localStorage.getItem('searchHistory') || '[]');
+}
+function saveSearchTerm(term) {
+  if (!term || term.length < 2) return;
+  const hist = [term, ...getSearchHistory().filter(x => x !== term)].slice(0, 8);
+  localStorage.setItem('searchHistory', JSON.stringify(hist));
+}
+
+function matchesAllFilters(p) {
+  const q = currentSearch.toLowerCase();
+  const bookMatch = currentBook === 'all' || p.lostBook.name === currentBook;
+  const themeMatch = currentTheme === 'all' || p.theme === currentTheme;
+  const fullText = `${p.lostBook.text} ${p.bible.text} ${p.lostBook.ref} ${p.bible.ref} ${p.theme} ${p.notes}`.toLowerCase();
+  const searchMatch = !q || fullText.includes(q);
+  const dateMatch = parseEraScore(p.lostBook.ref) <= currentDateRange;
+  const categoryMatch = currentCategories.has(inferCategory(p));
+  const tagMatch = selectedThemeTags.size === 0 || p.tags.some(t => selectedThemeTags.has(t));
+  return bookMatch && themeMatch && searchMatch && dateMatch && categoryMatch && tagMatch;
+}
+
+function highlightText(text, q) {
+  if (!q) return text;
+  const safe = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return String(text).replace(new RegExp(`(${safe})`, 'ig'), '<mark>$1</mark>');
+}
+
 function render() {
     const container = document.getElementById('parallelsContainer');
     const header = document.getElementById('resultsHeader');
     container.innerHTML = '';
 
-    const filtered = parallels.filter(p => {
-        const bookMatch = currentBook === 'all' || p.lostBook.name === currentBook;
-        const themeMatch = currentTheme === 'all' || p.theme === currentTheme;
-        const q = currentSearch.toLowerCase();
-        const searchMatch = !q ||
-            p.lostBook.text.toLowerCase().includes(q) ||
-            p.bible.text.toLowerCase().includes(q) ||
-            p.lostBook.ref.toLowerCase().includes(q) ||
-            p.bible.ref.toLowerCase().includes(q) ||
-            p.theme.toLowerCase().includes(q) ||
-            p.notes.toLowerCase().includes(q);
-        return bookMatch && themeMatch && searchMatch;
-    });
+    const filtered = parallels.filter(matchesAllFilters);
 
     header.textContent = `${filtered.length} parallel${filtered.length !== 1 ? 's' : ''} found`;
 
@@ -741,13 +850,13 @@ function render() {
                 <div class="panel lost-book-panel">
                     <div class="panel-label">Apocrypha / Pseudepigrapha</div>
                     <span class="book-name" data-book="${p.lostBook.name}" style="cursor:pointer;text-decoration:underline;">${p.lostBook.name}</span>
-                    <span class="reference">${p.lostBook.ref}</span>
-                    <div class="passage-text">${p.lostBook.text}</div>
+                    <span class="reference">${highlightText(p.lostBook.ref, currentSearch)}</span>
+                    <div class="passage-text">${highlightText(p.lostBook.text, currentSearch)}</div>
                 </div>
                 <div class="panel bible-panel">
                     <div class="panel-label">Hebrew Bible / New Testament</div>
-                    <span class="reference">${p.bible.ref}</span>
-                    <div class="passage-text">${p.bible.text}</div>
+                    <span class="reference">${highlightText(p.bible.ref, currentSearch)}</span>
+                    <div class="passage-text">${highlightText(p.bible.text, currentSearch)}</div>
                 </div>
             </div>
             <div class="card-footer">
@@ -768,19 +877,7 @@ function render() {
 }
 
 function getFilteredParallels() {
-    return parallels.filter(p => {
-        const bookMatch = currentBook === 'all' || p.lostBook.name === currentBook;
-        const themeMatch = currentTheme === 'all' || p.theme === currentTheme;
-        const q = currentSearch.toLowerCase();
-        const searchMatch = !q ||
-            p.lostBook.text.toLowerCase().includes(q) ||
-            p.bible.text.toLowerCase().includes(q) ||
-            p.lostBook.ref.toLowerCase().includes(q) ||
-            p.bible.ref.toLowerCase().includes(q) ||
-            p.theme.toLowerCase().includes(q) ||
-            p.notes.toLowerCase().includes(q);
-        return bookMatch && themeMatch && searchMatch;
-    });
+    return parallels.filter(matchesAllFilters);
 }
 
 function exportAsJson() {
@@ -829,6 +926,27 @@ refreshUserStatus();
 document.getElementById('exportJsonBtn').addEventListener('click', exportAsJson);
 document.getElementById('exportCsvBtn').addEventListener('click', exportAsCsv);
 
+// Advanced filters
+const adv = document.getElementById('advancedFilters');
+document.getElementById('toggleFiltersBtn').addEventListener('click', () => adv.classList.toggle('open'));
+const themeMulti = document.getElementById('themeMulti');
+themeMulti.innerHTML = [...new Set(parallels.flatMap(p => p.tags))].sort().map(t => `<option value="${t}">${t}</option>`).join('');
+themeMulti.addEventListener('change', () => {
+  selectedThemeTags = new Set(Array.from(themeMulti.selectedOptions).map(o => o.value));
+  render();
+});
+
+document.getElementById('dateRange').addEventListener('input', (e) => {
+  currentDateRange = Number(e.target.value);
+  document.getElementById('dateRangeLabel').textContent = currentDateRange >= 300 ? 'All eras' : `Up to score ${currentDateRange}`;
+  render();
+});
+
+document.querySelectorAll('.cat-filter').forEach(cb => cb.addEventListener('change', () => {
+  currentCategories = new Set(Array.from(document.querySelectorAll('.cat-filter:checked')).map(x => x.value));
+  render();
+}));
+
 // Dark mode: system detect + manual toggle
 const root = document.documentElement;
 const storedTheme = localStorage.getItem('theme');
@@ -850,14 +968,66 @@ readingBtn.addEventListener('click', () => {
     readingBtn.textContent = document.body.classList.contains('reading-view') ? 'Exit Read' : 'Read';
 });
 
-let searchDebounceTimer;
-document.getElementById('search').addEventListener('input', e => {
-    currentSearch = e.target.value;
-    clearTimeout(searchDebounceTimer);
-    searchDebounceTimer = setTimeout(() => {
+const searchInputSidebar = document.getElementById('search');
+const searchInputMain = document.getElementById('searchMain');
+const autocompleteList = document.getElementById('autocompleteList');
+
+function runSearchInput(value) {
+    currentSearch = value;
+    searchInputSidebar.value = value;
+    searchInputMain.value = value;
+    clearTimeout(window.searchDebounceTimer);
+    window.searchDebounceTimer = setTimeout(() => {
         render();
-    }, 300);
+        renderSearchHistory();
+        if (value) saveSearchTerm(value);
+    }, 250);
+}
+
+function buildAutocompleteSuggestions(term) {
+    const q = term.toLowerCase().trim();
+    if (!q) return [];
+    const refs = parallels.flatMap(p => [p.lostBook.ref, p.bible.ref]);
+    const pool = [...new Set([...allBooks, ...allThemes, ...refs])];
+    return pool.filter(x => x.toLowerCase().includes(q)).slice(0, 8);
+}
+
+function renderAutocomplete(term) {
+    const items = buildAutocompleteSuggestions(term);
+    if (!items.length) {
+        autocompleteList.style.display = 'none';
+        autocompleteList.innerHTML = '';
+        return;
+    }
+    autocompleteList.innerHTML = items.map(i => `<div class="autocomplete-item" data-ac="${i.replace(/"/g,'&quot;')}">${i}</div>`).join('');
+    autocompleteList.style.display = 'block';
+}
+
+function renderSearchHistory() {
+    const root = document.getElementById('searchHistory');
+    const hist = getSearchHistory();
+    root.innerHTML = hist.map(h => `<span class="history-chip" data-hist="${h.replace(/"/g,'&quot;')}">${h}</span>`).join('');
+}
+
+[searchInputSidebar, searchInputMain].forEach(inp => inp.addEventListener('input', e => {
+    runSearchInput(e.target.value);
+    renderAutocomplete(e.target.value);
+}));
+
+autocompleteList.addEventListener('click', e => {
+    const el = e.target.closest('[data-ac]');
+    if (!el) return;
+    runSearchInput(el.dataset.ac);
+    autocompleteList.style.display = 'none';
 });
+
+document.getElementById('searchHistory').addEventListener('click', e => {
+    const el = e.target.closest('[data-hist]');
+    if (!el) return;
+    runSearchInput(el.dataset.hist);
+});
+
+renderSearchHistory();
 
 const bookMeta = {
   '1 Enoch': { author: 'Trad. Enochic', date: '3rd–1st c. BCE', description: 'Apocalyptic visions, Watchers, judgment.' },
@@ -995,7 +1165,7 @@ scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior:
 document.addEventListener('keydown', (e) => {
     if (e.key === '/') {
         e.preventDefault();
-        document.getElementById('search').focus();
+        document.getElementById('searchMain').focus();
     } else if (e.key === '?') {
         e.preventDefault();
         openHelp();
