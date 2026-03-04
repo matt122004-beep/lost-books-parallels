@@ -625,6 +625,7 @@
             <button class="action-btn" id="exportCsvBtn" title="Export CSV">CSV</button>
             <button class="action-btn" id="profileBtn" title="Public profile">Profile</button>
             <button class="action-btn" id="collectionBtn" title="Collections">Collections</button>
+            <button class="action-btn" id="submitParallelBtn" title="Submit parallel">Submit</button>
             <button class="action-btn" id="helpBtn" title="Keyboard help">?</button>
         </div>
     </div>
@@ -750,6 +751,12 @@
 </div>
 <div class="book-modal" id="collectionModal" aria-hidden="true">
   <div class="book-modal-content" id="collectionModalContent"></div>
+</div>
+<div class="book-modal" id="submitModal" aria-hidden="true">
+  <div class="book-modal-content" id="submitModalContent"></div>
+</div>
+<div class="book-modal" id="historyModal" aria-hidden="true">
+  <div class="book-modal-content" id="historyModalContent"></div>
 </div>
 <button class="floating-btn" id="scrollTopBtn" aria-label="Scroll to top">↑</button>
 <script>
@@ -1034,9 +1041,25 @@ function getCommentsMap() {
 function saveCommentsMap(map) {
   localStorage.setItem('parallelComments', JSON.stringify(map));
 }
+const verifiedScholars = new Set(['matt122004-beep','dr-levi','prof-miriam']);
+const badge = (u) => verifiedScholars.has((u||'').toLowerCase()) ? ' <span style="font-size:.65rem;color:#f4d03f;border:1px solid #7a5d24;padding:1px 4px;border-radius:999px;">Expert</span>' : '';
+function addHistory(id, action, details='') {
+  const log = JSON.parse(localStorage.getItem('parallelHistory') || '{}');
+  const row = log[id] || [];
+  row.unshift({ ts: Date.now(), user: (getUser()?.login || 'guest'), action, details });
+  log[id] = row.slice(0, 80);
+  localStorage.setItem('parallelHistory', JSON.stringify(log));
+}
+function getHistory(id) {
+  return (JSON.parse(localStorage.getItem('parallelHistory') || '{}')[id] || []);
+}
+function citationStatus(p) {
+  const known = new Set(['Jude 14–15','Genesis 6:1–4','Daniel 7:9–14','Luke 16:22–26','Matthew 25:31–32','Exodus 31:12–17','Genesis 9:11–13','Matthew 7:7–8','Mark 4:30–32']);
+  return known.has(p.bible.ref) ? 'validated' : 'questionable';
+}
 function renderComments(id) {
   const comments = getCommentsMap()[id] || [];
-  return comments.map(c => `<div style="font-size:.74rem;margin:.2rem 0;padding:.2rem .35rem;border-left:2px solid var(--border-subtle)"><strong>${c.user||'guest'}</strong> <span style="opacity:.6">${new Date(c.ts).toLocaleString()}</span><div>${c.text}</div>${(c.replies||[]).map(r=>`<div style='margin-left:.7rem;opacity:.9'>↳ ${r.user||'guest'}: ${r.text}</div>`).join('')}<button class="copy-btn" data-reply="${id}:${c.id}">Reply</button></div>`).join('');
+  return comments.map(c => `<div style="font-size:.74rem;margin:.2rem 0;padding:.2rem .35rem;border-left:2px solid var(--border-subtle)"><strong>${c.user||'guest'}</strong>${badge(c.user)} <span style="opacity:.6">${new Date(c.ts).toLocaleString()}</span><div>${c.text}</div>${(c.replies||[]).map(r=>`<div style='margin-left:.7rem;opacity:.9'>↳ ${r.user||'guest'}${badge(r.user)}: ${r.text}</div>`).join('')}<button class="copy-btn" data-reply="${id}:${c.id}">Reply</button> ${c.user===(getUser()?.login||'guest')?`<button class="copy-btn" data-del-comment="${id}:${c.id}">Delete</button>`:''} <button class="copy-btn" data-report-comment="${id}:${c.id}">Report</button></div>`).join('');
 }
 
 function getSearchHistory() {
@@ -1105,6 +1128,7 @@ function render() {
             </div>
             <div class="card-footer">
                 <span class="theme-tag">${p.theme}</span>
+                <span class="theme-tag" style="margin-left:.35rem;${citationStatus(p)==='validated'?'':'background:#5a3b3b;color:#ffd1d1;border-color:#8a4d4d;'}">${citationStatus(p)==='validated'?'Source validated':'Questionable citation'}</span>
                 <div class="notes parallel-meta">${p.notes}</div>
                 <div class="notes" style="width:100%;font-size:.78rem;opacity:.95;">
                   MLA: ${p.lostBook.name}. <em>${p.lostBook.ref}</em>.<br>
@@ -1114,6 +1138,7 @@ function render() {
                 <button class="copy-btn" data-id="${p.id}">Copy</button>
                 <button class="copy-btn" data-cite="${p.id}">Copy Citations</button>
                 <button class="copy-btn" data-vote="${p.id}">▲ ${getVotes(p.id)}</button>
+                <button class="copy-btn" data-history="${p.id}">History</button>
                 <button class="copy-btn fav-btn ${isFavorite(p.id) ? 'active' : ''}" data-fav="${p.id}">♥</button>
                 <textarea class="note-box" data-note-id="${p.id}" placeholder="Your note...">${getNote(p.id)}</textarea>
                 <div style="width:100%;margin-top:.35rem;">
@@ -1258,6 +1283,28 @@ document.getElementById('collectionBtn').addEventListener('click', () => {
   document.getElementById('collectionModal').setAttribute('aria-hidden','false');
 });
 
+document.getElementById('submitParallelBtn').addEventListener('click', () => {
+  const queue = JSON.parse(localStorage.getItem('submissionQueue') || '[]');
+  const isAdmin = verifiedScholars.has((getUser()?.login||'').toLowerCase());
+  document.getElementById('submitModalContent').innerHTML = `
+    <h3 style="color:var(--gold-light)">Submit New Parallel</h3>
+    <div style="display:grid;gap:.35rem;">
+      <input id="subLostName" placeholder="Lost Book name">
+      <input id="subLostRef" placeholder="Lost Book reference">
+      <textarea id="subLostText" class="note-box" placeholder="Lost Book text"></textarea>
+      <input id="subBibleRef" placeholder="Bible reference">
+      <textarea id="subBibleText" class="note-box" placeholder="Bible text"></textarea>
+      <input id="subTheme" placeholder="Theme">
+      <input id="subNotes" placeholder="Notes">
+      <button class="action-btn" id="submitParallelConfirm">Submit to moderation</button>
+    </div>
+    <hr style="margin:.6rem 0;border-color:var(--border-subtle)">
+    <h4>Moderation Queue (${queue.length})</h4>
+    <div>${queue.map((q,i)=>`<div style='margin:.25rem 0;border-left:2px solid var(--border-subtle);padding-left:.45rem;'>${q.lostBook.name} → ${q.bible.ref} <span style='opacity:.65'>by ${q.user}${badge(q.user)}</span> ${isAdmin?`<button class='copy-btn' data-approve='${i}'>Approve</button>`:''}</div>`).join('') || '<em>No pending submissions.</em>'}</div>`;
+  document.getElementById('submitModal').classList.add('open');
+  document.getElementById('submitModal').setAttribute('aria-hidden','false');
+});
+
 (function importSharedCollection(){
   const m = location.hash.match(/collection=([^&]+)/);
   if (!m) return;
@@ -1395,7 +1442,18 @@ document.getElementById('parallelsContainer').addEventListener('click', async (e
     if (voteBtn) {
         const id = Number(voteBtn.dataset.vote);
         vote(id);
+        addHistory(id, 'vote', 'Upvoted');
         render();
+        return;
+    }
+
+    const historyBtn = e.target.closest('[data-history]');
+    if (historyBtn) {
+        const id = Number(historyBtn.dataset.history);
+        const rows = getHistory(id);
+        document.getElementById('historyModalContent').innerHTML = `<h3 style="color:var(--gold-light)">Version History</h3><div>${rows.map(r=>`<div style='margin:.25rem 0;border-left:2px solid var(--border-subtle);padding-left:.45rem;'><strong>${r.action}</strong> by ${r.user}${badge(r.user)} <span style='opacity:.6'>${new Date(r.ts).toLocaleString()}</span><div style='opacity:.85'>${r.details||''}</div></div>`).join('') || '<em>No history yet.</em>'}</div>`;
+        document.getElementById('historyModal').classList.add('open');
+        document.getElementById('historyModal').setAttribute('aria-hidden','false');
         return;
     }
 
@@ -1419,6 +1477,7 @@ document.getElementById('parallelsContainer').addEventListener('click', async (e
       row.push({ id: Date.now(), user: (getUser()?.login || 'guest'), text: input.value.trim(), ts: Date.now(), replies: [] });
       map[id] = row;
       saveCommentsMap(map);
+      addHistory(id, 'comment_add', input.value.trim().slice(0,80));
       input.value = '';
       render();
       return;
@@ -1436,8 +1495,30 @@ document.getElementById('parallelsContainer').addEventListener('click', async (e
         parent.replies = parent.replies || [];
         parent.replies.push({ user: (getUser()?.login || 'guest'), text: txt, ts: Date.now() });
         saveCommentsMap(map);
+        addHistory(pid, 'comment_reply', txt.slice(0,80));
         render();
       }
+      return;
+    }
+
+    const delBtn = e.target.closest('[data-del-comment]');
+    if (delBtn) {
+      const [pid,cid] = delBtn.dataset.delComment.split(':').map(Number);
+      const map = getCommentsMap();
+      map[pid] = (map[pid] || []).filter(c => c.id !== cid);
+      saveCommentsMap(map);
+      addHistory(pid, 'comment_delete', `Comment ${cid}`);
+      render();
+      return;
+    }
+
+    const reportBtn = e.target.closest('[data-report-comment]');
+    if (reportBtn) {
+      const [pid,cid] = reportBtn.dataset.reportComment.split(':').map(Number);
+      const reports = JSON.parse(localStorage.getItem('commentReports') || '[]');
+      reports.push({ pid, cid, user: (getUser()?.login||'guest'), ts: Date.now() });
+      localStorage.setItem('commentReports', JSON.stringify(reports));
+      alert('Comment reported for moderation.');
       return;
     }
 
@@ -1483,6 +1564,40 @@ document.getElementById('parallelsContainer').addEventListener('input', (e) => {
   const notes = JSON.parse(localStorage.getItem('userNotes') || '{}');
   notes[id] = note.value;
   localStorage.setItem('userNotes', JSON.stringify(notes));
+  addHistory(id, 'note_edit', note.value.slice(0,80));
+});
+
+document.addEventListener('click', (e) => {
+  if (e.target.id === 'submitParallelConfirm') {
+    const item = {
+      id: Date.now(),
+      user: (getUser()?.login || 'guest'),
+      lostBook: { name: document.getElementById('subLostName').value, ref: document.getElementById('subLostRef').value, text: document.getElementById('subLostText').value },
+      bible: { ref: document.getElementById('subBibleRef').value, text: document.getElementById('subBibleText').value },
+      theme: document.getElementById('subTheme').value,
+      notes: document.getElementById('subNotes').value,
+      tags: [document.getElementById('subTheme').value.toLowerCase()]
+    };
+    const queue = JSON.parse(localStorage.getItem('submissionQueue') || '[]');
+    queue.push(item);
+    localStorage.setItem('submissionQueue', JSON.stringify(queue));
+    alert('Submitted to moderation queue.');
+  }
+  const approve = e.target.closest('[data-approve]');
+  if (approve) {
+    const idx = Number(approve.dataset.approve);
+    const queue = JSON.parse(localStorage.getItem('submissionQueue') || '[]');
+    const item = queue[idx];
+    if (item) {
+      const id = Math.max(...parallels.map(p=>p.id))+1;
+      parallels.push({ ...item, id });
+      addHistory(id, 'created', 'Approved submission');
+      queue.splice(idx,1);
+      localStorage.setItem('submissionQueue', JSON.stringify(queue));
+      render();
+      alert('Submission approved and added.');
+    }
+  }
 });
 
 // Mobile/sidebar/help controls + keyboard shortcuts
@@ -1494,6 +1609,8 @@ const bookModal = document.getElementById('bookModal');
 const parallelModal = document.getElementById('parallelModal');
 const profileModal = document.getElementById('profileModal');
 const collectionModal = document.getElementById('collectionModal');
+const submitModal = document.getElementById('submitModal');
+const historyModal = document.getElementById('historyModal');
 const scrollTopBtn = document.getElementById('scrollTopBtn');
 
 function openSidebar() {
@@ -1526,6 +1643,8 @@ helpModal.addEventListener('click', (e) => { if (e.target === helpModal) closeHe
 bookModal.addEventListener('click', (e) => { if (e.target === bookModal) { bookModal.classList.remove('open'); bookModal.setAttribute('aria-hidden','true'); } });
 profileModal.addEventListener('click', (e) => { if (e.target === profileModal) { profileModal.classList.remove('open'); profileModal.setAttribute('aria-hidden','true'); } });
 collectionModal.addEventListener('click', (e) => { if (e.target === collectionModal) { collectionModal.classList.remove('open'); collectionModal.setAttribute('aria-hidden','true'); } });
+submitModal.addEventListener('click', (e) => { if (e.target === submitModal) { submitModal.classList.remove('open'); submitModal.setAttribute('aria-hidden','true'); } });
+historyModal.addEventListener('click', (e) => { if (e.target === historyModal) { historyModal.classList.remove('open'); historyModal.setAttribute('aria-hidden','true'); } });
 parallelModal.addEventListener('click', (e) => {
   if (e.target === parallelModal) {
     parallelModal.classList.remove('open');
@@ -1565,6 +1684,10 @@ document.addEventListener('keydown', (e) => {
         profileModal.setAttribute('aria-hidden', 'true');
         collectionModal.classList.remove('open');
         collectionModal.setAttribute('aria-hidden', 'true');
+        submitModal.classList.remove('open');
+        submitModal.setAttribute('aria-hidden', 'true');
+        historyModal.classList.remove('open');
+        historyModal.setAttribute('aria-hidden', 'true');
     }
 });
 
