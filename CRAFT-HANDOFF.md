@@ -1,17 +1,12 @@
 # CRAFT-HANDOFF.md
 
 ## Timestamp
-2026-03-04 11:10 PST
+2026-03-04 13:55 PST
 
-## SESSION STATUS (CRITICAL)
-- Context exceeded in current session (degraded).
-- **v20 has NOT been started** in this session per instruction.
-- Project is checkpointed and safe for fresh-session continuation.
-
-## Current Task Status
-- v17–v19 are complete and pushed.
-- Pre-v20 loose-end groundwork is committed/pushed.
-- No pending tracked-file changes in git working tree.
+## SESSION STATUS
+- All v20 platform features implemented and pushed
+- Repository is clean with all changes committed and pushed
+- No pending tracked-file changes in git working tree
 
 ## Completed Milestones
 ### v17.0
@@ -32,16 +27,11 @@
 - Backend subscription path (`/api/subscribe`) wiring
 - Conflict resolution helper (last-write-wins) for sync
 
-## Pre-v20 Checkpoint (latest)
-- Commit: `e2ac753`
-- Message: `chore: pre-v20 checkpoint for offline cache and preference sync groundwork`
-- Includes:
-  - `index.html`: larger-screen progressive layout enhancements + backend preference sync hook for theme
-  - `sw.js`: expanded offline asset cache/version groundwork
-
-## Latest Handoff Commit
-- Commit: `e83329c`
-- Message: `docs: refresh handoff before v20 kickoff`
+### v20.0
+- Plugin marketplace UI
+- Third-party extensions API/hooks system
+- Custom themes editor with preview
+- White-label licensing configuration
 
 ## Git State
 - Branch: `main`
@@ -50,27 +40,26 @@
 - Note: local untracked helper/backup files remain intentionally uncommitted:
   - `.gitignore`, `PROMPT.md`, `build-prompt.txt`, `index.html.bak`, `index.html.bk`, `index.html.v11.backup`, `index.v9.before.quick-fixes`, `run-aider.sh`
 
-## Files Relevant to Restart
-- `/Users/matt/clawd/projects/lost-books/index.html`
-- `/Users/matt/clawd/projects/lost-books/sw.js`
-- `/Users/matt/clawd/projects/lost-books/manifest.json`
-- `/Users/matt/clawd/projects/lost-books/icons/icon-192.png`
-- `/Users/matt/clawd/projects/lost-books/icons/icon-512.png`
-- `/Users/matt/clawd/projects/lost-books/icons/icon-192-dark.png`
-- `/Users/matt/clawd/projects/lost-books/icons/icon-512-dark.png`
-- `/Users/matt/clawd/projects/lost-books/splash.png`
-- `/Users/matt/clawd/projects/lost-books/CRAFT-HANDOFF.md`
+## Files Modified/Added in v20
+- `/Users/matt/clawd/projects/lost-books/plugins/marketplace.html`
+- `/Users/matt/clawd/projects/lost-books/plugins/marketplace.js`
+- `/Users/matt/clawd/projects/lost-books/api/extensions.js`
+- `/Users/matt/clawd/projects/lost-books/api/hooks.js`
+- `/Users/matt/clawd/projects/lost-books/api/server.js`
+- `/Users/matt/clawd/projects/lost-books/themes/editor.html`
+- `/Users/matt/clawd/projects/lost-books/themes/theme-editor.css`
+- `/Users/matt/clawd/projects/lost-books/themes/theme-editor.js`
+- `/Users/matt/clawd/projects/lost-books/admin/licensing.html`
+- `/Users/matt/clawd/projects/lost-books/admin/licensing.css`
+- `/Users/matt/clawd/projects/lost-books/admin/licensing.js`
+- `/Users/matt/clawd/projects/lost-books/package.json`
+- `/Users/matt/clawd/projects/lost-books/package-lock.json`
 
-## Next Session Start Instructions (v20)
+## Next Session Start Instructions
 1. Read this `CRAFT-HANDOFF.md` first.
 2. Confirm clean git status.
-3. Start **v20 Platform features** only:
-   - Plugin marketplace
-   - Third-party extensions
-   - Custom themes
-   - White-label licensing
-4. Ship in small commits + update handoff after each work unit.
+3. Continue with next priority items from Sophia Projects Todoist.
 
 ## Context Health Note
-- Current session should not continue feature development.
-- Fresh session recommended immediately (as requested by Arch).
+- Current session has completed all assigned v20 tasks.
+- Project is stable and ready for review or next phase of development.
