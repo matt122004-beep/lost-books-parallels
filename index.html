@@ -399,9 +399,10 @@
     </div>
 </header>
 <div class="container">
-    <aside class="sidebar" id="sidebar">
+    <aside class="sidebar" id="sidebar" aria-label="Filters">
         <div class="search-container">
-            <input type="text" id="search" placeholder="Search parallels…">
+            <label id="search-label" for="search" style="display: none;">Search parallels</label>
+            <input type="text" id="search" placeholder="Search parallels…" aria-label="Search parallels">
         </div>
         <h3>Books</h3>
         <ul class="book-list" id="bookList"></ul>
@@ -410,8 +411,8 @@
             <ul class="theme-list" id="themeList"></ul>
         </div>
     </aside>
-    <main class="main-content">
-        <div class="results-header" id="resultsHeader"></div>
+    <main class="main-content" id="main-content">
+        <div class="results-header" id="resultsHeader" aria-live="polite" role="status"></div>
         <div class="parallels-container" id="parallelsContainer"></div>
     </main>
 </div>
@@ -501,12 +502,24 @@ function bookCount(book) { return parallels.filter(p => p.lostBook.name === book
 function themeCount(theme) { return parallels.filter(p => p.theme === theme).length; }
 
 function buildSidebar() {
+    const makeKeyboardAccessible = (el, action) => {
+        el.setAttribute('tabindex', '0');
+        el.setAttribute('role', 'button');
+        el.addEventListener('click', action);
+        el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                action();
+            }
+        });
+    };
+
     const bookList = document.getElementById('bookList');
     const allItem = document.createElement('li');
     allItem.className = 'book-item active';
     allItem.dataset.book = 'all';
     allItem.innerHTML = `All Books <span class="count">${parallels.length}</span>`;
-    allItem.addEventListener('click', () => setBook('all'));
+    makeKeyboardAccessible(allItem, () => setBook('all'));
     bookList.appendChild(allItem);
 
     allBooks.forEach(book => {
@@ -514,7 +527,7 @@ function buildSidebar() {
         li.className = 'book-item';
         li.dataset.book = book;
         li.innerHTML = `${book} <span class="count">${bookCount(book)}</span>`;
-        li.addEventListener('click', () => setBook(book));
+        makeKeyboardAccessible(li, () => setBook(book));
         bookList.appendChild(li);
     });
 
@@ -522,14 +535,14 @@ function buildSidebar() {
     const allThemeItem = document.createElement('li');
     allThemeItem.className = 'theme-item active';
     allThemeItem.textContent = 'All Themes';
-    allThemeItem.addEventListener('click', () => setTheme('all'));
+    makeKeyboardAccessible(allThemeItem, () => setTheme('all'));
     themeList.appendChild(allThemeItem);
 
     allThemes.forEach(theme => {
         const li = document.createElement('li');
         li.className = 'theme-item';
         li.textContent = `${theme} (${themeCount(theme)})`;
-        li.addEventListener('click', () => setTheme(theme));
+        makeKeyboardAccessible(li, () => setTheme(theme));
         themeList.appendChild(li);
     });
 }
@@ -605,9 +618,14 @@ function render() {
 buildSidebar();
 render();
 document.getElementById('headerStats').textContent = `${parallels.length} parallels · ${allBooks.length} books`;
+
+let searchDebounceTimer;
 document.getElementById('search').addEventListener('input', e => {
     currentSearch = e.target.value;
-    render();
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(() => {
+        render();
+    }, 300);
 });
 
 // Mobile sidebar toggle
