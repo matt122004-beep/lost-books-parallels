@@ -560,50 +560,52 @@ h1 {
 <body>
 <a href="#main-content" class="skip-link">Skip to content</a>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
-<header>
+
+<header role="banner">
     <div class="header-left">
-        <button class="hamburger" id="hamburger" aria-label="Open navigation">&#9776;</button>
+        <button class="hamburger" id="hamburger" aria-label="Open filters" aria-expanded="false" aria-controls="sidebar">&#9776;</button>
         <h1>Lost Books</h1>
     </div>
     <div class="header-center">
         <div class="subtitle">Apocrypha &amp; Bible Parallels</div>
         <div class="stats" id="headerStats"></div>
         <div class="stats" id="userStatus"></div>
-        <div class="stats" id="offlineIndicator" style="display:none;color:#ef4444;font-size:.75rem;">Offline</div>
-        <div class="stats" id="syncStatus" style="display:none;font-size:.75rem;opacity:.85;">Syncing&hellip;</div>
+        <div id="offlineIndicator" style="display:none;color:#ef4444;font-size:.72rem;font-weight:600;" role="status" aria-live="polite">&#9679; Offline</div>
+        <div id="syncStatus" style="display:none;font-size:.72rem;opacity:.8;" role="status" aria-live="polite">Syncing&hellip;</div>
     </div>
     <div class="header-right">
         <div class="header-actions">
-            <button class="action-btn" id="themeToggleBtn" title="Toggle theme">&#9790;</button>
-            <button class="action-btn" id="readingToggleBtn" title="Reading view">Read</button>
-            <button class="action-btn" id="loginBtn" title="Login">Login</button>
-            <button class="action-btn" id="profileBtn" title="Profile">Profile</button>
-            <button class="action-btn" id="collectionBtn" title="Collections">Collections</button>
-            <button class="action-btn" id="exportJsonBtn" title="Export JSON">JSON</button>
-            <button class="action-btn" id="exportCsvBtn" title="Export CSV">CSV</button>
-            <button class="action-btn" id="submitParallelBtn" title="Submit">Submit</button>
-            <button class="action-btn" id="settingsBtn" title="Settings">&#9881;</button>
-            <button class="action-btn" id="helpBtn" title="Help">?</button>
+            <button class="action-btn" id="themeToggleBtn" title="Toggle theme" aria-label="Toggle colour theme">&#9790;</button>
+            <button class="action-btn" id="readingToggleBtn" title="Reading view" aria-label="Toggle reading view">Read</button>
+            <button class="action-btn" id="loginBtn" title="Sign in" aria-label="Login">Login</button>
+            <button class="action-btn" id="profileBtn" title="Profile" aria-label="Profile">Profile</button>
+            <button class="action-btn" id="settingsBtn" title="Settings" aria-label="Settings">&#9881;</button>
+            <button class="action-btn" id="exportJsonBtn" title="Export JSON" aria-label="Export JSON">JSON</button>
+            <button class="action-btn" id="exportCsvBtn" title="Export CSV" aria-label="Export CSV">CSV</button>
+            <button class="action-btn" id="collectionBtn" title="Collections" aria-label="Collections">Collections</button>
+            <button class="action-btn" id="submitParallelBtn" title="Submit" aria-label="Submit a parallel">Submit</button>
+            <button class="action-btn" id="helpBtn" title="Help" aria-label="Help">?</button>
         </div>
     </div>
 </header>
+
 <div class="container">
-    <aside class="sidebar" id="sidebar" aria-label="Filters">
+    <aside class="sidebar" id="sidebar" aria-label="Filters and navigation">
         <div class="search-container">
             <label id="search-label" for="search" style="display:none;">Search parallels</label>
             <input type="text" id="search" placeholder="Search parallels&hellip;" aria-label="Search parallels" autocomplete="off">
-            <div id="autocomplete-suggestions" class="autocomplete-suggestions"></div>
+            <div id="autocomplete-suggestions" class="autocomplete-suggestions" role="listbox" aria-label="Search suggestions"></div>
         </div>
         <div class="advanced-filters">
-            <h3>Advanced Filters</h3>
+            <h3>Refine Results</h3>
             <div class="filter-group">
                 <label for="date-range-start">Date Range:</label>
-                <input type="date" id="date-range-start" placeholder="Start date">
-                <input type="date" id="date-range-end" placeholder="End date">
+                <input type="date" id="date-range-start" aria-label="Start date">
+                <input type="date" id="date-range-end" aria-label="End date">
             </div>
             <div class="filter-group">
                 <label for="category-filter">Category:</label>
-                <select id="category-filter">
+                <select id="category-filter" aria-label="Category filter">
                     <option value="all">All Categories</option>
                     <option value="apocrypha">Apocrypha</option>
                     <option value="pseudepigrapha">Pseudepigrapha</option>
@@ -612,97 +614,103 @@ h1 {
             </div>
             <div class="filter-group">
                 <label for="theme-tags">Theme Tags:</label>
-                <select id="theme-tags" multiple></select>
+                <select id="theme-tags" multiple aria-label="Theme tags"></select>
             </div>
-            <button id="apply-filters" class="action-btn">Apply Filters</button>
-            <button id="clear-filters" class="action-btn">Clear Filters</button>
+            <button id="apply-filters" class="action-btn">Apply</button>
+            <button id="clear-filters" class="action-btn">Clear</button>
         </div>
-        <h3>Books</h3>
-        <ul class="book-list" id="bookList"></ul>
+        <h3>Browse by Book</h3>
+        <ul class="book-list" id="bookList" role="list"></ul>
         <div class="theme-section">
-            <h3>Themes</h3>
-            <ul class="theme-list" id="themeList"></ul>
+            <h3>Browse by Theme</h3>
+            <ul class="theme-list" id="themeList" role="list"></ul>
         </div>
     </aside>
+
     <main class="main-content" id="main-content">
-        <section class="hero-section">
-            <div class="hero-ornament"></div>
+        <section class="hero-section" aria-label="Welcome">
+            <div class="hero-ornament" aria-hidden="true"></div>
             <h2>Discover the Hidden Connections</h2>
             <p>Exploring textual parallels between ancient apocryphal writings and sacred scripture</p>
-            <div class="hero-ornament"></div>
+            <div class="hero-ornament" aria-hidden="true"></div>
         </section>
+
         <section class="search-hub" aria-label="Search and discovery">
             <div class="search-row">
-                <input type="text" id="searchMain" placeholder="Search texts, references, themes&hellip;" aria-label="Search full text">
+                <input type="text" id="searchMain" placeholder="Search texts, references, themes&hellip;" aria-label="Search full text" autocomplete="off">
                 <select id="sortBy" class="action-btn" aria-label="Sort results">
                     <option value="relevance">Relevance</option>
                     <option value="popular">Popularity</option>
                 </select>
-                <button class="action-btn" id="toggleFiltersBtn">Filters</button>
+                <button class="action-btn" id="toggleFiltersBtn" aria-expanded="false" aria-controls="advancedFilters">Filters</button>
             </div>
-            <div id="autocompleteList" class="autocomplete-list"></div>
-            <div id="searchHistory" class="history-row"></div>
-            <div id="advancedFilters" class="advanced-filters">
+            <div id="autocompleteList" class="autocomplete-list" role="listbox" aria-label="Autocomplete suggestions"></div>
+            <div id="searchHistory" class="history-row" aria-label="Recent searches"></div>
+            <div id="advancedFilters" class="advanced-filters" aria-hidden="true">
                 <div class="filter-grid">
                     <div class="filter-group">
-                        <label for="dateRange"><strong>Date range</strong></label>
-                        <input type="range" id="dateRange" min="0" max="300" value="300">
+                        <label for="dateRange"><strong>Era range</strong></label>
+                        <input type="range" id="dateRange" min="0" max="300" value="300" aria-label="Filter by era">
                         <div id="dateRangeLabel" style="font-size:.75rem;opacity:.85;">All eras</div>
                     </div>
                     <div class="filter-group">
-                        <strong>Book categories</strong>
+                        <strong>Corpus categories</strong>
                         <label style="display:block;font-size:.8rem;"><input type="checkbox" class="cat-filter" value="apocrypha" checked> Apocrypha</label>
                         <label style="display:block;font-size:.8rem;"><input type="checkbox" class="cat-filter" value="dss" checked> Dead Sea Scrolls</label>
                         <label style="display:block;font-size:.8rem;"><input type="checkbox" class="cat-filter" value="gnostic" checked> Gnostic / Nag Hammadi</label>
                     </div>
-                    <div class="filter-group" style="grid-column: 1 / span 2;">
+                    <div class="filter-group" style="grid-column:1 / span 2;">
                         <label for="themeMulti"><strong>Theme tags</strong></label>
-                        <select id="themeMulti" multiple style="width:100%;min-height:76px;"></select>
+                        <select id="themeMulti" multiple style="width:100%;min-height:76px;" aria-label="Filter by theme"></select>
                     </div>
                 </div>
             </div>
         </section>
-        <section class="viz-section" aria-label="Discovery tools">
+
+        <section class="viz-section" aria-label="Visual discovery tools">
             <div class="viz-card">
-                <strong>Timeline</strong>
-                <div id="timelineTrack" class="timeline-track"></div>
+                <strong>Chronological Timeline</strong>
+                <div id="timelineTrack" class="timeline-track" role="region" aria-label="Timeline"></div>
             </div>
             <div class="viz-card">
-                <strong>Origin Map</strong>
+                <strong>Geographical Origins</strong>
                 <div class="map-wrap">
-                    <svg id="originMap" viewBox="0 0 600 220" style="width:100%;height:220px;border:1px solid var(--border-subtle);border-radius:10px;background:var(--bg-deep);">
-                        <rect x="0" y="0" width="600" height="220" fill="currentColor" opacity="0.02"></rect>
-                        <text x="12" y="20" fill="currentColor" opacity="0.3" font-size="12">Symbolic origin clusters</text>
+                    <svg id="originMap" viewBox="0 0 600 220" style="width:100%;height:220px;border:1px solid var(--border-subtle);border-radius:10px;background:var(--bg-deep);" aria-label="Origin map" role="img">
+                        <rect x="0" y="0" width="600" height="220" fill="#1b1b1b"></rect>
+                        <text x="12" y="20" fill="#a8a8a8" font-size="12">Symbolic origin clusters</text>
                     </svg>
                 </div>
             </div>
             <div class="viz-card">
-                <strong>Relationships</strong>
-                <svg id="relationshipGraph" viewBox="0 0 600 220" style="width:100%;height:220px;border:1px solid var(--border-subtle);border-radius:10px;background:var(--bg-deep);"></svg>
+                <strong>Relationship Graph</strong>
+                <svg id="relationshipGraph" viewBox="0 0 600 220" style="width:100%;height:220px;border:1px solid var(--border-subtle);border-radius:10px;background:var(--bg-deep);" aria-label="Relationship graph" role="img"></svg>
             </div>
             <div class="viz-card">
                 <strong>Reading Progress</strong>
                 <div class="progress-wrap">
-                    <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
-                    <span id="progressLabel" style="font-size:.78rem;min-width:70px;">0%</span>
+                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Reading progress"><div id="progressFill" class="progress-fill"></div></div>
+                    <span id="progressLabel" style="font-size:.78rem;min-width:70px;" aria-live="polite">0%</span>
                 </div>
             </div>
             <div class="viz-card">
                 <strong>AI Recommendations</strong>
-                <div id="aiRecommendations" style="font-size:.82rem;opacity:.92;margin-top:.3rem;">Read more parallels to unlock personalized recommendations.</div>
+                <div id="aiRecommendations" style="font-size:.82rem;opacity:.92;margin-top:.3rem;" aria-live="polite">Read more parallels to unlock personalized recommendations.</div>
             </div>
         </section>
+
         <div class="results-header" id="resultsHeader" aria-live="polite" role="status"></div>
-        <div class="parallels-container" id="parallelsContainer"></div>
+        <div class="parallels-container" id="parallelsContainer" role="feed" aria-label="Parallel passages"></div>
     </main>
 </div>
+
 <nav class="bottom-nav" id="bottomNav" aria-label="Mobile navigation">
-    <button id="bnHome" data-route="home">Home</button>
-    <button id="bnSearch" data-route="search">Search</button>
-    <button id="bnFavs" data-route="favorites">Favorites</button>
-    <button id="bnInstall" data-route="install">Install</button>
+    <button id="bnHome" data-route="home" aria-label="Home">Home</button>
+    <button id="bnSearch" data-route="search" aria-label="Search">Search</button>
+    <button id="bnFavs" data-route="favorites" aria-label="Favorites">Saved</button>
+    <button id="bnInstall" data-route="install" aria-label="Install">Install</button>
 </nav>
-<div class="help-modal" id="helpModal" aria-hidden="true">
+
+<div class="help-modal" id="helpModal" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts" aria-hidden="true">
     <div class="help-content">
         <h3 style="margin-bottom:.75rem;color:var(--gold-light);font-family:var(--font-display);font-size:1.3rem;font-weight:500;">Keyboard Shortcuts</h3>
         <p style="margin:.4rem 0;"><strong>/</strong> &mdash; Focus search</p>
@@ -710,32 +718,34 @@ h1 {
         <p style="margin:.4rem 0;"><strong>Esc</strong> &mdash; Close panels &amp; modals</p>
     </div>
 </div>
-<div class="book-modal" id="bookModal" aria-hidden="true">
+<div class="book-modal" id="bookModal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="book-modal-content" id="bookModalContent"></div>
 </div>
-<div class="book-modal" id="parallelModal" aria-hidden="true">
+<div class="book-modal" id="parallelModal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="book-modal-content" id="parallelModalContent"></div>
 </div>
-<div class="book-modal" id="profileModal" aria-hidden="true">
+<div class="book-modal" id="profileModal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="book-modal-content" id="profileModalContent"></div>
 </div>
-<div class="book-modal" id="collectionModal" aria-hidden="true">
+<div class="book-modal" id="collectionModal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="book-modal-content" id="collectionModalContent"></div>
 </div>
-<div class="book-modal" id="submitModal" aria-hidden="true">
+<div class="book-modal" id="submitModal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="book-modal-content" id="submitModalContent"></div>
 </div>
-<div class="book-modal" id="historyModal" aria-hidden="true">
+<div class="book-modal" id="historyModal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="book-modal-content" id="historyModalContent"></div>
 </div>
-<div class="book-modal" id="settingsModal" aria-hidden="true">
+<div class="book-modal" id="settingsModal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="book-modal-content" id="settingsModalContent"></div>
 </div>
 <button class="floating-btn" id="scrollTopBtn" aria-label="Scroll to top">&uarr;</button>
+
 <footer class="site-footer">
     <p>Lost Books</p>
     <p class="footer-sub">Apocrypha &amp; Bible Parallels &mdash; A Scholarly Reference</p>
 </footer>
+
 <script>
 const parallels = [
   // ── 1 ENOCH ──────────────────────────────────────────────────────────────
@@ -1931,6 +1941,9 @@ document.getElementById('parallelsContainer').addEventListener('touchend', (e) =
       localStorage.setItem('favorites', JSON.stringify([...favs]));
       render();
     }
+  }
+});
+
 </script>
 </body>
 </html>
