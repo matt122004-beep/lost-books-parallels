@@ -10,24 +10,26 @@
     <link rel="apple-touch-startup-image" href="splash.png">
     <title>Lost Books — Apocrypha &amp; Bible Parallels</title>
     <link rel="stylesheet" href="css/print.css" media="print">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
     <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap');
 
 :root {
-  --bg-deep: #060606;
-  --bg-surface: #0e0e0e;
-  --bg-elevated: #161616;
-  --bg-card: #111111;
-  --gold: #c8a951;
-  --gold-light: #e4cc7a;
-  --gold-dim: #907a3a;
-  --gold-glow: rgba(200, 169, 81, 0.12);
-  --ivory: #f0ebe3;
-  --text-primary: #e8e4dc;
-  --text-secondary: #9a9080;
-  --text-dim: #5a5348;
-  --border-subtle: rgba(255,255,255,0.04);
-  --border-accent: rgba(200,169,81,0.15);
+  --bg-deep: #0a0a0a;
+  --bg-surface: #101010;
+  --bg-elevated: #1a1a1a;
+  --bg-card: #121212;
+  --gold: #d4a574;
+  --gold-light: #f0d9b5;
+  --gold-dim: #8b7d5f;
+  --gold-glow: rgba(212, 165, 116, 0.10);
+  --ivory: #f5f1eb;
+  --text-primary: #f5f1eb;
+  --text-secondary: #c0b5a8;
+  --text-dim: #7a6f62;
+  --border-subtle: rgba(255,255,255,0.08);
+  --border-accent: rgba(212,165,116,0.18);
   --sage: #7a9e7e;
   --sage-dim: #5d7a60;
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.4);
@@ -1240,6 +1242,28 @@ header, .site-header {
     font-size: 0.85rem;
   }
 }
+.card-actions { display: flex; gap: 0.5rem; align-items: center; margin-left: auto; }
+.detail-btn {
+    background: transparent; border: 1px solid var(--border-accent);
+    color: var(--gold-dim); border-radius: 50%; width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 1.1rem; transition: all 0.3s;
+}
+.detail-btn:hover { color: var(--gold-light); border-color: var(--gold); }
+.modal-header-bar { display: flex; justify-content: space-between; align-items: center; }
+.modal-close-btn {
+    background: transparent; border: none; color: var(--text-dim);
+    font-size: 1.5rem; cursor: pointer; padding: 0.5rem;
+    transition: color 0.3s;
+}
+.modal-close-btn:hover { color: var(--text-primary); }
+.menu-item {
+    background: transparent; border: 1px solid var(--border-subtle);
+    color: var(--text-secondary); padding: 0.75rem 1rem; border-radius: 8px;
+    font-family: var(--font-body); font-size: 0.85rem; text-align: left;
+    cursor: pointer; transition: all 0.3s; letter-spacing: 0.03em;
+}
+.menu-item:hover { background: var(--gold-glow); color: var(--gold-light); border-color: var(--border-accent); }
     </style>
 </head>
 <body>
@@ -1261,15 +1285,19 @@ header, .site-header {
     <div class="header-right">
         <div class="header-actions">
             <button class="action-btn" id="themeToggleBtn" title="Toggle theme">&#9790;</button>
-            <button class="action-btn" id="readingToggleBtn" title="Reading view">Read</button>
-            <button class="action-btn" id="loginBtn" title="Sign in">Login</button>
-            <button class="action-btn" id="profileBtn" title="Profile">Profile</button>
-            <button class="action-btn" id="exportJsonBtn" title="Export JSON">JSON</button>
-            <button class="action-btn" id="exportCsvBtn" title="Export CSV">CSV</button>
-            <button class="action-btn" id="collectionBtn" title="Collections">Collections</button>
-            <button class="action-btn" id="submitParallelBtn" title="Submit">Submit</button>
-            <button class="action-btn" id="settingsBtn" title="Settings">&#9881;</button>
             <button class="action-btn" id="helpBtn" title="Help">?</button>
+            <button class="action-btn" id="menuToggleBtn" title="Menu">&#8943;</button>
+        </div>
+        <!-- Hidden buttons — still in DOM for JS, shown via menu modal -->
+        <div style="display:none;">
+            <button id="readingToggleBtn">Read</button>
+            <button id="loginBtn">Login</button>
+            <button id="profileBtn">Profile</button>
+            <button id="exportJsonBtn">JSON</button>
+            <button id="exportCsvBtn">CSV</button>
+            <button id="collectionBtn">Collections</button>
+            <button id="submitParallelBtn">Submit</button>
+            <button id="settingsBtn">Settings</button>
         </div>
     </div>
 </header>
@@ -1329,6 +1357,7 @@ header, .site-header {
                     <option value="popular">Popularity</option>
                 </select>
                 <button class="action-btn" id="toggleFiltersBtn" aria-expanded="false" aria-controls="advancedFilters">Filters</button>
+                <button class="action-btn" id="toggleVizBtn">Analytics</button>
             </div>
             <div id="autocompleteList" class="autocomplete-list" role="listbox"></div>
             <div id="searchHistory" class="history-row"></div>
@@ -1353,7 +1382,7 @@ header, .site-header {
             </div>
         </section>
 
-        <section class="viz-section" aria-label="Visual discovery">
+        <section class="viz-section" aria-label="Visual discovery" id="vizSection" style="display:none;">
             <div class="viz-card">
                 <strong>Timeline</strong>
                 <div id="timelineTrack" class="timeline-track"></div>
@@ -1424,6 +1453,22 @@ header, .site-header {
 </div>
 <div class="book-modal" id="settingsModal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="book-modal-content" id="settingsModalContent"></div>
+</div>
+<div class="book-modal" id="menuModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="book-modal-content" id="menuModalContent" style="max-width:360px;">
+        <h3 style="font-family:var(--font-display);font-size:1.3rem;font-weight:500;color:var(--gold-light);margin-bottom:1.25rem;">Menu</h3>
+        <div style="display:grid;gap:.6rem;">
+            <button class="menu-item" onclick="document.getElementById('readingToggleBtn').click();document.getElementById('menuModal').classList.remove('open');">Reading View</button>
+            <button class="menu-item" onclick="document.getElementById('loginBtn').click();document.getElementById('menuModal').classList.remove('open');">Sign In</button>
+            <button class="menu-item" onclick="document.getElementById('profileBtn').click();document.getElementById('menuModal').classList.remove('open');">Profile</button>
+            <button class="menu-item" onclick="document.getElementById('collectionBtn').click();document.getElementById('menuModal').classList.remove('open');">Collections</button>
+            <button class="menu-item" onclick="document.getElementById('submitParallelBtn').click();document.getElementById('menuModal').classList.remove('open');">Submit Parallel</button>
+            <button class="menu-item" onclick="document.getElementById('settingsBtn').click();document.getElementById('menuModal').classList.remove('open');">Settings</button>
+            <hr style="border:none;border-top:1px solid var(--border-subtle);margin:.25rem 0;">
+            <button class="menu-item" onclick="document.getElementById('exportJsonBtn').click();document.getElementById('menuModal').classList.remove('open');">Export JSON</button>
+            <button class="menu-item" onclick="document.getElementById('exportCsvBtn').click();document.getElementById('menuModal').classList.remove('open');">Export CSV</button>
+        </div>
+    </div>
 </div>
 <button class="floating-btn" id="scrollTopBtn" aria-label="Scroll to top">&uarr;</button>
 
@@ -1507,20 +1552,7 @@ const parallels = [
   { id:39, lostBook:{name:'Damascus Document (CD)',ref:'CD 7:18–20',text:'"The star is the Interpreter of the Torah who shall come to Damascus, as it is written: \'A star has marched forth from Jacob, and a sceptre shall rise from Israel.\' The sceptre is the Prince of the whole congregation, and when he arises, he shall destroy all the sons of Seth."'},bible:{ref:'Numbers 24:17; Matthew 2:2',text:'There shall come a Star out of Jacob, and a Sceptre shall rise out of Israel, and shall smite the corners of Moab, and destroy all the children of Sheth. (Num 24:17)…Saying, Where is he that is born King of the Jews? for we have seen his star in the east, and are come to worship him. (Matt 2:2)'},theme:'Davidic Messiah',notes:'The Damascus Document interprets the "Star of Jacob" prophecy messianically — the same text Matthew connects to the Magi\'s star. This shows that messianic readings of Numbers 24:17 were established in pre-Christian Jewish interpretation.'},
 ];
 
-// v11 data expansion to 100+ (derived + tagged links)
-const seedParallels = [...parallels];
-let nextId = Math.max(...parallels.map(p => p.id)) + 1;
-while (parallels.length < 110) {
-  const s = seedParallels[(nextId - 1) % seedParallels.length];
-  parallels.push({
-    ...s,
-    id: nextId,
-    lostBook: { ...s.lostBook, ref: `${s.lostBook.ref} (Tradition ${nextId - 39})` },
-    bible: { ...s.bible },
-    notes: `${s.notes} [Expanded corpus entry]`
-  });
-  nextId++;
-}
+// Tag generation for filtering
 parallels.forEach(p => p.tags = [...new Set([p.theme.toLowerCase(), ...p.lostBook.name.toLowerCase().split(/\s+/).slice(0,2)])]);
 
 // Add dates to parallels for filtering
@@ -1824,6 +1856,68 @@ function highlightText(text, q) {
   return String(text).replace(new RegExp(`(${safe})`, 'ig'), '<mark>$1</mark>');
 }
 
+function showDetailModal(id) {
+    const p = parallels.find(x => x.id === id);
+    if (!p) return;
+    const related = aiRelatedParallels(id, 4);
+    const status = citationStatus(p);
+    document.getElementById('parallelModalContent').innerHTML = `
+        <div class="modal-header-bar">
+            <h3 style="font-family:var(--font-display);font-size:1.4rem;font-weight:500;color:var(--gold-light);">${p.lostBook.name}</h3>
+            <button class="modal-close-btn" onclick="document.getElementById('parallelModal').classList.remove('open');document.getElementById('parallelModal').setAttribute('aria-hidden','true');">&times;</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0;">
+            <div style="border-left:2px solid var(--gold);padding-left:1.25rem;">
+                <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.2em;color:var(--gold);margin-bottom:.5rem;">Lost Book</div>
+                <div style="font-style:italic;font-size:.82rem;color:var(--text-secondary);margin-bottom:.5rem;">${p.lostBook.ref}</div>
+                <div style="font-family:var(--font-display);font-size:1.05rem;line-height:1.85;color:var(--text-primary);">${p.lostBook.text}</div>
+            </div>
+            <div style="border-left:2px solid var(--sage);padding-left:1.25rem;">
+                <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.2em;color:var(--sage);margin-bottom:.5rem;">Scripture</div>
+                <div style="font-style:italic;font-size:.82rem;color:var(--text-secondary);margin-bottom:.5rem;">${p.bible.ref}</div>
+                <div style="font-family:var(--font-display);font-size:1.05rem;line-height:1.85;color:var(--text-primary);">${p.bible.text}</div>
+            </div>
+        </div>
+        <div style="border-top:1px solid var(--border-subtle);padding-top:1rem;margin-top:.5rem;">
+            <p style="font-style:italic;font-size:.88rem;line-height:1.7;color:var(--text-secondary);">${p.notes}</p>
+        </div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem;">
+            <span class="theme-tag">${p.theme}</span>
+            <span class="theme-tag" style="${status==='validated'?'':'background:rgba(196,122,122,0.1);color:#c47a7a;border-color:rgba(196,122,122,0.2);'}">${status==='validated'?'Validated':'Unverified'}</span>
+        </div>
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border-subtle);font-size:.78rem;color:var(--text-dim);line-height:1.7;">
+            <strong style="color:var(--text-secondary);">Citations</strong><br>
+            MLA: ${p.lostBook.name}. <em>${p.lostBook.ref}</em>.<br>
+            APA: ${p.lostBook.name} (${p.lostBook.ref}).<br>
+            Chicago: ${p.lostBook.name}, ${p.lostBook.ref}.
+        </div>
+        <div style="display:flex;gap:.5rem;margin-top:1.25rem;flex-wrap:wrap;">
+            <button class="copy-btn" data-id="${p.id}">Copy Text</button>
+            <button class="copy-btn" data-cite="${p.id}">Copy Citations</button>
+            <button class="copy-btn" data-vote="${p.id}">&#9650; ${getVotes(p.id)}</button>
+            <button class="copy-btn" data-history="${p.id}">History</button>
+            <button class="copy-btn" data-ai-explain="${p.id}">Simplify</button>
+            <button class="copy-btn" data-ai-questions="${p.id}">Study Questions</button>
+        </div>
+        <div class="notes" data-ai-out="${p.id}" style="width:100%;font-size:.82rem;margin-top:.75rem;"></div>
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border-subtle);">
+            <strong style="font-size:.78rem;color:var(--text-secondary);">Notes</strong>
+            <textarea class="note-box" data-note-id="${p.id}" placeholder="Add your notes..." style="margin-top:.5rem;">${getNote(p.id)}</textarea>
+        </div>
+        <div style="margin-top:1rem;">
+            <strong style="font-size:.78rem;color:var(--text-secondary);">Comments</strong>
+            <div class="comments" data-comments="${p.id}" style="margin-top:.35rem;">${renderComments(p.id)}</div>
+            <div style="display:flex;gap:.5rem;margin-top:.5rem;">
+                <input class="note-box" style="min-height:unset;height:36px;flex:1;" data-comment-input="${p.id}" placeholder="Add comment...">
+                <button class="copy-btn" data-comment-submit="${p.id}">Post</button>
+            </div>
+        </div>
+        ${related.length ? `<div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border-subtle);"><strong style="font-size:.78rem;color:var(--text-secondary);">Related Passages</strong><ul style="margin-top:.35rem;list-style:none;">${related.map(r => `<li style="margin:.25rem 0;"><a href="#" data-jump="${r.id}" style="color:var(--gold-light);font-size:.85rem;text-decoration:none;">${r.lostBook.name} — ${r.lostBook.ref}</a></li>`).join('')}</ul></div>` : ''}
+    `;
+    document.getElementById('parallelModal').classList.add('open');
+    document.getElementById('parallelModal').setAttribute('aria-hidden','false');
+}
+
 function render() {
     const container = document.getElementById('parallelsContainer');
     const header = document.getElementById('resultsHeader');
@@ -1849,44 +1943,26 @@ function render() {
         card.dataset.pid = String(p.id);
         card.dataset.theme = p.theme;
         card.innerHTML = `
-            <div class="card-header">
-                <div class="panel lost-book-panel">
-                    <div class="panel-label">Apocrypha / Pseudepigrapha</div>
-                    <span class="book-name" data-book="${p.lostBook.name}" style="cursor:pointer;text-decoration:underline;">${p.lostBook.name}</span>
-                    <span class="reference">${highlightText(p.lostBook.ref, currentSearch)}</span>
-                    <div class="passage-text">${highlightText(p.lostBook.text, currentSearch)}</div>
-                </div>
-                <div class="panel bible-panel">
-                    <div class="panel-label">Hebrew Bible / New Testament</div>
-                    <span class="reference">${highlightText(p.bible.ref, currentSearch)}</span>
-                    <div class="passage-text">${highlightText(p.bible.text, currentSearch)}</div>
-                </div>
-            </div>
-            <div class="card-footer">
-                <span class="theme-tag">${p.theme}</span>
-                <span class="theme-tag" style="margin-left:.35rem;${citationStatus(p)==='validated'?'':'background:#5a3b3b;color:#ffd1d1;border-color:#8a4d4d;'}">${citationStatus(p)==='validated'?'Source validated':'Questionable citation'}</span>
-                <div class="notes parallel-meta">${p.notes}</div>
-                <div class="notes" style="width:100%;font-size:.78rem;opacity:.95;">
-                  MLA: ${p.lostBook.name}. <em>${p.lostBook.ref}</em>.<br>
-                  APA: ${p.lostBook.name} (${p.lostBook.ref}).<br>
-                  Chicago: ${p.lostBook.name}, ${p.lostBook.ref}.
-                </div>
-                <button class="copy-btn" data-id="${p.id}">Copy</button>
-                <button class="copy-btn" data-cite="${p.id}">Copy Citations</button>
-                <button class="copy-btn" data-vote="${p.id}">▲ ${getVotes(p.id)}</button>
-                <button class="copy-btn" data-history="${p.id}">History</button>
-                <button class="copy-btn" data-ai-explain="${p.id}">Simplify</button>
-                <button class="copy-btn" data-ai-questions="${p.id}">Study Qs</button>
-                <button class="copy-btn fav-btn ${isFavorite(p.id) ? 'active' : ''}" data-fav="${p.id}">♥</button>
-                <textarea class="note-box" data-note-id="${p.id}" placeholder="Your note...">${getNote(p.id)}</textarea>
-                <div class="notes" data-ai-out="${p.id}" style="width:100%;font-size:.78rem;opacity:.95;"></div>
-                <div style="width:100%;margin-top:.35rem;">
-                  <div style="font-size:.75rem;opacity:.85;margin-bottom:.2rem;">Comments</div>
-                  <div class="comments" data-comments="${p.id}">${renderComments(p.id)}</div>
-                  <input class="note-box" style="min-height:unset;height:36px;" data-comment-input="${p.id}" placeholder="Add comment…">
-                  <button class="copy-btn" data-comment-submit="${p.id}">Post</button>
-                </div>
-            </div>`;
+    <div class="card-header">
+        <div class="panel lost-book-panel">
+            <div class="panel-label">Lost Book</div>
+            <span class="book-name" data-book="${p.lostBook.name}" style="cursor:pointer">${p.lostBook.name}</span>
+            <span class="reference">${highlightText(p.lostBook.ref, currentSearch)}</span>
+            <div class="passage-text">${highlightText(p.lostBook.text, currentSearch)}</div>
+        </div>
+        <div class="panel bible-panel">
+            <div class="panel-label">Scripture</div>
+            <span class="reference">${highlightText(p.bible.ref, currentSearch)}</span>
+            <div class="passage-text">${highlightText(p.bible.text, currentSearch)}</div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <span class="theme-tag">${p.theme}</span>
+        <div class="card-actions">
+            <button class="fav-btn ${isFavorite(p.id) ? 'active' : ''}" data-fav="${p.id}" title="Save">&#9829;</button>
+            <button class="detail-btn" data-detail="${p.id}" title="Details">&#8250;</button>
+        </div>
+    </div>`;
         container.appendChild(card);
     });
     observeViewedCards();
@@ -2068,6 +2144,10 @@ document.getElementById('submitParallelBtn').addEventListener('click', () => {
 // Advanced filters
 const adv = document.getElementById('advancedFilters');
 document.getElementById('toggleFiltersBtn').addEventListener('click', () => adv.classList.toggle('open'));
+document.getElementById('toggleVizBtn').addEventListener('click', () => {
+  const viz = document.getElementById('vizSection');
+  viz.style.display = viz.style.display === 'none' ? 'grid' : 'none';
+});
 const themeMulti = document.getElementById('themeMulti');
 themeMulti.innerHTML = [...new Set(parallels.flatMap(p => p.tags))].sort().map(t => `<option value="${t}">${t}</option>`).join('');
 themeMulti.addEventListener('change', () => {
@@ -2327,15 +2407,16 @@ document.getElementById('parallelsContainer').addEventListener('click', async (e
         return;
     }
 
+    const detailBtn = e.target.closest('[data-detail]');
+    if (detailBtn) {
+        showDetailModal(Number(detailBtn.dataset.detail));
+        return;
+    }
+
     const card = e.target.closest('.parallel-card');
-    if (card && !e.target.closest('button') && !e.target.closest('textarea')) {
-      const refText = card.querySelector('.reference')?.textContent || '';
-      const item = parallels.find(p => p.lostBook.ref === refText) || parallels[0];
-      const related = aiRelatedParallels(item.id, 6);
-      const links = related.map(r => `<li><a href="#" data-jump="${r.id}" style="color:var(--gold-light)">${r.lostBook.name} — ${r.lostBook.ref}</a></li>`).join('');
-      document.getElementById('parallelModalContent').innerHTML = `<h3 style="color:var(--gold-light)">${item.lostBook.name} · ${item.lostBook.ref}</h3><p>${item.lostBook.text}</p><hr style="margin:.6rem 0;border-color:var(--border-subtle);"><p><strong>AI-generated Related Passages</strong></p><ul>${links || '<li>None</li>'}</ul>`;
-      document.getElementById('parallelModal').classList.add('open');
-      document.getElementById('parallelModal').setAttribute('aria-hidden','false');
+    if (card && !e.target.closest('button') && !e.target.closest('textarea') && !e.target.closest('.book-name')) {
+        const id = Number(card.dataset.pid);
+        if (id) showDetailModal(id);
     }
 });
 
@@ -2458,6 +2539,14 @@ window.addEventListener('scroll', () => {
 });
 scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
+// Menu modal toggle
+const menuModal = document.getElementById('menuModal');
+document.getElementById('menuToggleBtn')?.addEventListener('click', () => {
+    menuModal.classList.add('open');
+    menuModal.setAttribute('aria-hidden','false');
+});
+menuModal.addEventListener('click', (e) => { if (e.target === menuModal) { menuModal.classList.remove('open'); menuModal.setAttribute('aria-hidden','true'); } });
+
 document.addEventListener('keydown', (e) => {
     if (e.key === '/') {
         e.preventDefault();
@@ -2482,6 +2571,8 @@ document.addEventListener('keydown', (e) => {
         historyModal.setAttribute('aria-hidden', 'true');
         settingsModal.classList.remove('open');
         settingsModal.setAttribute('aria-hidden', 'true');
+        menuModal.classList.remove('open');
+        menuModal.setAttribute('aria-hidden', 'true');
     }
 });
 

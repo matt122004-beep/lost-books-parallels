@@ -1,0 +1,548 @@
+[
+  {
+    "id": 1,
+    "lostBook": {
+      "name": "1 Enoch",
+      "ref": "1 En. 1:9",
+      "text": "Behold, he comes with ten thousands of his holy ones, to execute judgment on all, and to destroy all the wicked, and to convict all flesh for all the wicked deeds that they have done, and the proud and hard words which wicked sinners spoke against him."
+    },
+    "bible": {
+      "ref": "Jude 14–15",
+      "text": "And Enoch also, the seventh from Adam, prophesied of these, saying, Behold, the Lord cometh with ten thousands of his saints, to execute judgment upon all, and to convince all that are ungodly among them of all their ungodly deeds which they have ungodly committed, and of all their hard speeches which ungodly sinners have spoken against him."
+    },
+    "theme": "Judgment",
+    "notes": "Jude 14–15 is among the clearest NT citations of pseudepigraphal literature. The verbal parallel is almost exact."
+  },
+  {
+    "id": 2,
+    "lostBook": {
+      "name": "1 Enoch",
+      "ref": "1 En. 6:1–4",
+      "text": "And it came to pass when the children of men had multiplied that in those days were born unto them beautiful and comely daughters. And the angels, the children of heaven, saw and lusted after them, and said to one another: \"Come, let us choose wives from among the children of men.\" Then they all swore an oath together and bound themselves by mutual imprecations not to abandon this plan."
+    },
+    "bible": {
+      "ref": "Genesis 6:1–4",
+      "text": "And it came to pass, when men began to multiply on the face of the earth, and daughters were born unto them, that the sons of God saw the daughters of men that they were fair; and they took them wives of all which they chose. There were giants in the earth in those days; and also after that, when the sons of God came in unto the daughters of men, and they bare children to them, the same became mighty men which were of old, men of renown."
+    },
+    "theme": "Fall of Angels",
+    "notes": "1 Enoch elaborates the \"sons of God\" episode in Genesis with named Watchers and their oath."
+  },
+  {
+    "id": 3,
+    "lostBook": {
+      "name": "1 Enoch",
+      "ref": "1 En. 46:1–3",
+      "text": "There I beheld the Ancient of Days whose head was white as wool, and with him another whose countenance resembled that of a man. His countenance was full of grace, like one of the holy angels. And I asked one of the angels concerning that Son of Man, and he answered: \"This is the Son of Man who hath righteousness, with whom dwelleth righteousness, and who revealeth all the treasures of that which is hidden.\""
+    },
+    "bible": {
+      "ref": "Daniel 7:9–14",
+      "text": "I beheld till the thrones were cast down, and the Ancient of days did sit, whose garment was white as snow, and the hair of his head like the pure wool…I saw in the night visions one like the Son of man came with the clouds of heaven, and came to the Ancient of days, and they brought him near before him. And there was given him dominion, and glory, and a kingdom."
+    },
+    "theme": "Son of Man",
+    "notes": "1 Enoch's Parables (chs. 37–71) develop the \"Son of Man\" figure from Dan 7 with messianic and eschatological content that may inform the NT Gospels."
+  },
+  {
+    "id": 4,
+    "lostBook": {
+      "name": "1 Enoch",
+      "ref": "1 En. 22:1–4",
+      "text": "And thence I went to another place, and he showed me in the west another great and high mountain; and therein a hard rock and four hollow places, deep and wide and very smooth. Three of them were dark and one bright; and there was a fountain of water in its midst. And I said: \"How smooth are the hollow places and deep and dark to view.\" Then Raphael answered, one of the holy angels who was with me, and said unto me: \"These hollow places have been created for this very purpose, that the spirits of the souls of the dead should assemble therein.\""
+    },
+    "bible": {
+      "ref": "Luke 16:22–26",
+      "text": "And it came to pass, that the beggar died, and was carried by the angels into Abraham's bosom: the rich man also died, and was buried; and in hell he lifted up his eyes, being in torments, and seeth Abraham afar off, and Lazarus in his bosom. And beside all this, between us and you there is a great gulf fixed: so that they which would pass from hence to you cannot; neither can they pass to us, that would come from thence."
+    },
+    "theme": "Afterlife",
+    "notes": "Both texts depict a divided realm of the dead — separated compartments for the righteous and the wicked — before final judgment."
+  },
+  {
+    "id": 5,
+    "lostBook": {
+      "name": "1 Enoch",
+      "ref": "1 En. 69:27–29",
+      "text": "And he sat on the throne of his glory, and the sum of judgment was given unto the Son of Man, and he caused the sinners to pass away and be destroyed from off the face of the earth, and those who have led the world astray. With chains shall they be bound, and in their assemblage-place of destruction shall they be imprisoned, and all their works vanish from the face of the earth."
+    },
+    "bible": {
+      "ref": "Matthew 25:31–32",
+      "text": "When the Son of man shall come in his glory, and all the holy angels with him, then shall he sit upon the throne of his glory: And before him shall be gathered all nations: and he shall separate them one from another, as a shepherd divideth his sheep from the goats."
+    },
+    "theme": "Last Judgment",
+    "notes": "Both texts connect the Son of Man figure with enthronement for universal judgment — a key Christological background."
+  },
+  {
+    "id": 6,
+    "lostBook": {
+      "name": "2 Enoch",
+      "ref": "2 En. 30:8–11",
+      "text": "And I appointed him a name, from the four component parts: from East, West, North, and South. I appointed for him four special stars, and I called his name Adam. And I gave him his free will; and I pointed out to him two ways — light and darkness. And I said to him: \"This is good for thee, and that is bad\"; so that I should learn whether he has love towards me, or hatred."
+    },
+    "bible": {
+      "ref": "Genesis 2:7, 16–17",
+      "text": "And the Lord God formed man of the dust of the ground, and breathed into his nostrils the breath of life; and man became a living soul…And the Lord God commanded the man, saying, Of every tree of the garden thou mayest freely eat: But of the tree of the knowledge of good and evil, thou shalt not eat of it: for in the day that thou eatest thereof thou shalt surely die."
+    },
+    "theme": "Creation of Adam",
+    "notes": "2 Enoch explains the name \"Adam\" as an acronym from the four compass directions — an interpretive expansion of the Genesis creation narrative."
+  },
+  {
+    "id": 7,
+    "lostBook": {
+      "name": "2 Enoch",
+      "ref": "2 En. 65:6–8",
+      "text": "When all creation visible and invisible, as the Lord created it, shall end, then every man goes to the great judgment, and then all time shall perish, and the years, and thenceforward there will be neither months nor days nor hours; they will be stuck together and will not be counted. There will be one aeon, and all the righteous who shall escape the Lord's great judgment, shall be collected in the great aeon."
+    },
+    "bible": {
+      "ref": "Revelation 21:1, 4",
+      "text": "And I saw a new heaven and a new earth: for the first heaven and the first earth were passed away; and there was no more sea. And God shall wipe away all tears from their eyes; and there shall be no more death, neither sorrow, nor crying, neither shall there be any more pain: for the former things are passed away."
+    },
+    "theme": "New Age",
+    "notes": "Both texts envision the end of measured time and the beginning of a transformed eternal age beyond the present order."
+  },
+  {
+    "id": 8,
+    "lostBook": {
+      "name": "Jubilees",
+      "ref": "Jub. 2:17–21",
+      "text": "And He gave us a great sign, the Sabbath day, that we should work six days, but keep Sabbath on the seventh day from all work. And all the angels of the presence, and all the angels of sanctification, these two great classes — He hath bidden us to keep the Sabbath with Him in heaven and on earth. And He said unto us: \"Behold, I will separate unto Myself a people from among all the peoples, and these shall keep the Sabbath day.\""
+    },
+    "bible": {
+      "ref": "Exodus 31:12–17",
+      "text": "And the Lord spake unto Moses, saying, Speak thou also unto the children of Israel, saying, Verily my sabbaths ye shall keep: for it is a sign between me and you throughout your generations; that ye may know that I am the Lord that doth sanctify you…Wherefore the children of Israel shall keep the sabbath, to observe the sabbath throughout their generations, for a perpetual covenant."
+    },
+    "theme": "Sabbath",
+    "notes": "Jubilees grounds Sabbath observance in heavenly precedent — the angels themselves keep it — intensifying its theological importance beyond the Exodus text."
+  },
+  {
+    "id": 9,
+    "lostBook": {
+      "name": "Jubilees",
+      "ref": "Jub. 6:4–7",
+      "text": "And Noah made atonement for the earth on that day, and he blessed God who had created him; and he rejoiced on that day because he had set his heart to make a covenant with the children of Noah. And God smelled the sweet savour, and he made a covenant with him that there should not be any more flood to destroy the earth; that all the days of the earth seed-time and harvest should never cease."
+    },
+    "bible": {
+      "ref": "Genesis 9:11–13",
+      "text": "And I will establish my covenant with you; neither shall all flesh be cut off any more by the waters of a flood; neither shall there any more be a flood to destroy the earth. And God said, This is the token of the covenant which I make between me and you and every living creature that is with you, for perpetual generations: I do set my bow in the cloud, and it shall be for a token of a covenant between me and the earth."
+    },
+    "theme": "Covenant",
+    "notes": "Jubilees presents the Noahic covenant as establishing a perpetual festival calendar — giving Jubilees' distinctive chronological interests their theological grounding."
+  },
+  {
+    "id": 10,
+    "lostBook": {
+      "name": "Gospel of Thomas",
+      "ref": "Gos. Thom. 2",
+      "text": "Jesus said: \"Let him who seeks continue seeking until he finds; and when he finds, he will become troubled; and when he becomes troubled, he will be astonished, and he will rule over the All.\""
+    },
+    "bible": {
+      "ref": "Matthew 7:7–8",
+      "text": "Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you: For every one that asketh receiveth; and he that seeketh findeth; and to him that knocketh it shall be opened."
+    },
+    "theme": "Seeking Truth",
+    "notes": "Thomas shares the Q logion about seeking/finding but adds a gnostic ascent motif: finding leads to disturbance, then wonder, then sovereignty."
+  },
+  {
+    "id": 11,
+    "lostBook": {
+      "name": "Gospel of Thomas",
+      "ref": "Gos. Thom. 20",
+      "text": "The disciples said to Jesus: \"Tell us what the Kingdom of Heaven is like.\" Jesus said: \"It is like a mustard seed, the smallest of all seeds. But when it falls on tilled soil, it produces a great plant and becomes a shelter for birds of the sky.\""
+    },
+    "bible": {
+      "ref": "Mark 4:30–32",
+      "text": "And he said, Whereunto shall we liken the kingdom of God? or with what comparison shall we compare it? It is like a grain of mustard seed, which, when it is sown in the earth, is less than all the seeds that be in the earth: But when it is sown, it groweth up, and becometh greater than all herbs, and shooteth out great branches; so that the fowls of the air may lodge under the shadow of it."
+    },
+    "theme": "Kingdom of God",
+    "notes": "Thomas shares the mustard seed parable verbatim with the Synoptic tradition but lacks the allegorical interpretation, suggesting an independent stream."
+  },
+  {
+    "id": 12,
+    "lostBook": {
+      "name": "Gospel of Thomas",
+      "ref": "Gos. Thom. 76",
+      "text": "Jesus said: \"The Kingdom of the Father is like a merchant who had a consignment of merchandise and then found a pearl. That merchant was prudent; he sold the merchandise and bought the one pearl alone. You too, seek his unfailing and enduring treasure where no moth comes near to devour and no worm destroys.\""
+    },
+    "bible": {
+      "ref": "Matthew 13:45–46",
+      "text": "Again, the kingdom of heaven is like unto a merchant man, seeking goodly pearls: Who, when he had found one pearl of great price, went and sold all that he had, and bought it."
+    },
+    "theme": "Kingdom of God",
+    "notes": "Thomas's version blends the Pearl of Great Price (Matt 13:45–46) with the Treasure saying (Matt 6:19–20), suggesting oral variants circulating independently."
+  },
+  {
+    "id": 13,
+    "lostBook": {
+      "name": "Gospel of Thomas",
+      "ref": "Gos. Thom. 97",
+      "text": "Jesus said: \"The Kingdom of the Father is like a certain woman who was carrying a jar full of meal. While she was walking on the road, still some distance from home, the handle of the jar broke and the meal emptied out behind her on the road. She did not realize it; she had noticed no accident. When she reached her house, she set the jar down and found it empty.\""
+    },
+    "bible": {
+      "ref": "Matthew 13:33",
+      "text": "Another parable spake he unto them; The kingdom of heaven is like unto leaven, which a woman took, and hid in three measures of meal, till the whole was leavened."
+    },
+    "theme": "Kingdom of God",
+    "notes": "Thomas's \"Empty Jar\" parable is unique to this gospel — it may represent an alternative wisdom tradition about the Kingdom that Matthew's leaven parable only partially parallels."
+  },
+  {
+    "id": 14,
+    "lostBook": {
+      "name": "Gospel of Peter",
+      "ref": "Gos. Pet. 35–42",
+      "text": "Now in the night in which the Lord's day dawned, when the soldiers, two by two in every watch, were keeping guard, there rang out a loud voice in heaven, and they saw the heavens opened and two men come down from there in a great brightness and draw nigh to the sepulchre. That stone which had been laid against the entrance to the sepulchre started of itself to roll and gave way to the side, and the sepulchre was opened, and both the young men entered in."
+    },
+    "bible": {
+      "ref": "Matthew 28:2–4",
+      "text": "And, behold, there was a great earthquake: for the angel of the Lord descended from heaven, and came and rolled back the stone from the door, and sat upon it. His countenance was like lightning, and his raiment white as snow: And for fear of him the keepers did shake, and became as dead men."
+    },
+    "theme": "Resurrection",
+    "notes": "Gospel of Peter includes guards at the tomb (shared with Matthew alone) and adds a spectacular angelophany with a cross that speaks — features absent from Mark and Luke."
+  },
+  {
+    "id": 15,
+    "lostBook": {
+      "name": "Gospel of Peter",
+      "ref": "Gos. Pet. 5–6",
+      "text": "And one of them said: \"Give him to drink gall with vinegar,\" and mixing it they gave him to drink. And they fulfilled all things, and accomplished their sins against their own head. And many went about with torches, supposing that it was night, and fell down. And the Lord cried out and said: \"My power, O power, thou hast forsaken me!\" And saying this he was taken up."
+    },
+    "bible": {
+      "ref": "Matthew 27:34; Mark 15:34",
+      "text": "They gave him vinegar to drink mingled with gall: and when he had tasted thereof, he would not drink. (Matt 27:34)…And at the ninth hour Jesus cried with a loud voice, saying, Eloi, Eloi, lama sabachthani? which is, being interpreted, My God, my God, why hast thou forsaken me? (Mark 15:34)"
+    },
+    "theme": "Crucifixion",
+    "notes": "Gospel of Peter alters the cry of dereliction to \"My power, O power, thou hast forsaken me\" — a docetic reinterpretation that strips the Aramaic quotation of Psalm 22."
+  },
+  {
+    "id": 16,
+    "lostBook": {
+      "name": "Wisdom of Solomon",
+      "ref": "Wis. 2:12–20",
+      "text": "\"Let us lie in wait for the righteous man, because he is inconvenient to us and opposes our actions; he reproaches us for sins against the law, and accuses us of sins against our training. He professes to have knowledge of God, and calls himself a child of the Lord…Let us test him with insult and torture, so that we may find out how gentle he is…Let us condemn him to a shameful death, for, according to what he says, he will be protected.\""
+    },
+    "bible": {
+      "ref": "Matthew 27:41–43",
+      "text": "Likewise also the chief priests mocking him, with the scribes and elders, said, He saved others; himself he cannot save. If he be the King of Israel, let him now come down from the cross, and we will believe him. He trusted in God; let him deliver him now, if he will have him: for he said, I am the Son of God."
+    },
+    "theme": "Suffering Righteous",
+    "notes": "Early Christians read Wis 2 as a prophetic type of the Passion narrative; the verbal echoes between the mocking of the righteous man and the crucifixion mocking are striking."
+  },
+  {
+    "id": 17,
+    "lostBook": {
+      "name": "Wisdom of Solomon",
+      "ref": "Wis. 7:25–26",
+      "text": "For she is a breath of the power of God, and a pure emanation of the glory of the Almighty; therefore nothing defiled gains entrance into her. For she is a reflection of eternal light, a spotless mirror of the working of God, and an image of his goodness."
+    },
+    "bible": {
+      "ref": "Hebrews 1:3",
+      "text": "Who being the brightness of his glory, and the express image of his person, and upholding all things by the word of his power, when he had by himself purged our sins, sat down on the right hand of the Majesty on high."
+    },
+    "theme": "Divine Wisdom",
+    "notes": "The Wisdom Christology of Hebrews 1 and John 1 draws on exactly this language from Wis 7 — \"reflection/brightness\" (ἀπαύγασμα) and \"image\" (εἰκών) of the divine glory."
+  },
+  {
+    "id": 18,
+    "lostBook": {
+      "name": "Wisdom of Solomon",
+      "ref": "Wis. 3:1–5",
+      "text": "But the souls of the righteous are in the hand of God, and no torment will ever touch them. In the eyes of the foolish they seemed to have died, and their departure was thought to be a disaster, and their going from us to be their destruction; but they are at peace. For though in the sight of others they were punished, their hope is full of immortality."
+    },
+    "bible": {
+      "ref": "Romans 8:18",
+      "text": "For I reckon that the sufferings of this present time are not worthy to be compared with the glory which shall be revealed in us."
+    },
+    "theme": "Immortality",
+    "notes": "Wisdom of Solomon introduces a Platonic concept of the soul's immortality into Jewish scripture — a major conceptual bridge to NT eschatology and Pauline theology."
+  },
+  {
+    "id": 19,
+    "lostBook": {
+      "name": "Sirach",
+      "ref": "Sir. 24:3–8",
+      "text": "I came forth from the mouth of the Most High, and covered the earth like a mist. I dwelt in the highest heavens, and my throne was in a pillar of cloud. Alone I compassed the vault of heaven and traversed the depths of the abyss. Over waves of the sea, over all the earth, and over every people and nation I have held sway."
+    },
+    "bible": {
+      "ref": "John 1:1–3",
+      "text": "In the beginning was the Word, and the Word was with God, and the Word was God. The same was in the beginning with God. All things were made by him; and without him was not any thing made that was made."
+    },
+    "theme": "Divine Wisdom",
+    "notes": "Sirach 24's Wisdom Hymn — Wisdom speaking in first person as the one present at creation — is the key OT background for the Johannine Logos prologue."
+  },
+  {
+    "id": 20,
+    "lostBook": {
+      "name": "Sirach",
+      "ref": "Sir. 51:23–27",
+      "text": "\"Draw near to me, you who are uneducated, and lodge in the house of instruction. Why do you say you are lacking in these things, and why do your souls thirst for them so much? I opened my mouth and said, Acquire wisdom for yourselves without money. Put your neck under her yoke, and let your souls receive instruction; it is to be found close by. See with your own eyes that I have labored but little and found for myself much serenity.\""
+    },
+    "bible": {
+      "ref": "Matthew 11:28–30",
+      "text": "Come unto me, all ye that labour and are heavy laden, and I will give you rest. Take my yoke upon you, and learn of me; for I am meek and lowly in heart: and ye shall find rest unto your souls. For my yoke is easy, and my burden is light."
+    },
+    "theme": "Divine Wisdom",
+    "notes": "Jesus' \"Come to me\" invitation in Matt 11 reproduces almost verbatim the invitation of Wisdom in Sirach 51 — a key passage for understanding Wisdom Christology in Matthew."
+  },
+  {
+    "id": 21,
+    "lostBook": {
+      "name": "Sirach",
+      "ref": "Sir. 3:30",
+      "text": "Water extinguishes a blazing fire: so almsgiving atones for sin."
+    },
+    "bible": {
+      "ref": "Proverbs 16:6",
+      "text": "By mercy and truth iniquity is purged: and by the fear of the Lord men depart from evil."
+    },
+    "theme": "Atonement",
+    "notes": "Both texts connect charitable acts with atonement — a trajectory in Second Temple Judaism that shaped the development of penitential theology."
+  },
+  {
+    "id": 22,
+    "lostBook": {
+      "name": "Tobit",
+      "ref": "Tob. 4:15",
+      "text": "And what you hate, do not do to anyone. Do not drink wine to excess or let drunkenness go with you on your way. Give some of your food to the hungry, and some of your clothing to the naked. Give all your surplus as alms, and do not let your eye begrudge your giving of alms."
+    },
+    "bible": {
+      "ref": "Matthew 7:12",
+      "text": "Therefore all things whatsoever ye would that men should do to you, do ye even so to them: for this is the law and the prophets."
+    },
+    "theme": "Golden Rule",
+    "notes": "Tobit 4:15 contains the negative form of the Golden Rule — \"what you hate, do not do to anyone\" — one of the earliest extant versions, predating Jesus' positive formulation."
+  },
+  {
+    "id": 23,
+    "lostBook": {
+      "name": "Tobit",
+      "ref": "Tob. 12:15",
+      "text": "I am Raphael, one of the seven angels who stand ready and enter before the glory of the Lord."
+    },
+    "bible": {
+      "ref": "Luke 1:19",
+      "text": "And the angel answering said unto him, I am Gabriel, that stand in the presence of God; and am sent to speak unto thee, and to shew thee these glad tidings."
+    },
+    "theme": "Angels",
+    "notes": "Both texts introduce an angel with the formula \"I stand before God\" — Tobit establishes the seven-angel tradition that shapes Jewish angelology and informs Luke's Annunciation."
+  },
+  {
+    "id": 24,
+    "lostBook": {
+      "name": "Judith",
+      "ref": "Jdt. 8:12–14",
+      "text": "\"Who are you to put God to the test today, and to set yourselves up in the place of God in human affairs? You are putting the Lord Almighty to the test, but you will never learn anything! You cannot plumb the depths of the human heart or understand the workings of the human mind; how do you expect to search out God, who made all these things, and find out his mind or comprehend his thought?\""
+    },
+    "bible": {
+      "ref": "Romans 11:33–34",
+      "text": "O the depth of the riches both of the wisdom and knowledge of God! how unsearchable are his judgments, and his ways past finding out! For who hath known the mind of the Lord? or who hath been his counsellor?"
+    },
+    "theme": "Divine Sovereignty",
+    "notes": "Judith's rebuke against testing God foreshadows Paul's doxology on divine incomprehensibility — sharing the rhetorical form of unanswerable questions about the divine mind."
+  },
+  {
+    "id": 25,
+    "lostBook": {
+      "name": "1 Maccabees",
+      "ref": "1 Macc. 2:27",
+      "text": "Then Mattathias cried out in the city with a loud voice, saying: \"Let every one who is zealous for the law and supports the covenant come out with me!\" And he and his sons fled to the hills and left all that they had in the city."
+    },
+    "bible": {
+      "ref": "Numbers 25:7–8, 11 (Phinehas)",
+      "text": "And when Phinehas, the son of Eleazar, the son of Aaron the priest, saw it, he rose up from among the congregation, and took a javelin in his hand…Phinehas the son of Eleazar…hath turned my wrath away from the children of Israel, while he was zealous for my sake among them."
+    },
+    "theme": "Covenant Zeal",
+    "notes": "1 Maccabees explicitly invokes Phinehas as the model for Mattathias — both are types of covenant zeal. Paul uses the same tradition in Galatians 1:14 and Phil 3:6."
+  },
+  {
+    "id": 26,
+    "lostBook": {
+      "name": "1 Maccabees",
+      "ref": "1 Macc. 14:41",
+      "text": "The Jews and their priests have resolved that Simon should be their leader and high priest for ever, until a trustworthy prophet should arise."
+    },
+    "bible": {
+      "ref": "John 4:25",
+      "text": "The woman saith unto him, I know that Messias cometh, which is called Christ: when he is come, he will tell us all things."
+    },
+    "theme": "Messianic Expectation",
+    "notes": "Both texts reveal a first-century Jewish expectation of a coming authoritative prophet or anointed figure — the background against which Jesus' ministry was understood."
+  },
+  {
+    "id": 27,
+    "lostBook": {
+      "name": "2 Maccabees",
+      "ref": "2 Macc. 7:9, 28–29",
+      "text": "\"You accursed wretch, you dismiss us from this present life, but the King of the universe will raise us up to an everlasting renewal of life, because we have died for his laws.\" (v. 9)… \"I beg you, my child, to look at the heaven and the earth and see everything that is in them, and recognize that God did not make them out of things that existed. And in the same way the human race came into being.\" (vv. 28–29)"
+    },
+    "bible": {
+      "ref": "John 5:28–29",
+      "text": "Marvel not at this: for the hour is coming, in the which all that are in the graves shall hear his voice, And shall come forth; they that have done good, unto the resurrection of life; and they that have done evil, unto the resurrection of damnation."
+    },
+    "theme": "Resurrection",
+    "notes": "2 Maccabees 7 is the most explicit pre-Christian Jewish text on bodily resurrection — and the doctrine of creatio ex nihilo. These martyrs' faith shaped both Pharisaic theology and NT resurrection hope."
+  },
+  {
+    "id": 28,
+    "lostBook": {
+      "name": "Psalms of Solomon",
+      "ref": "Pss. Sol. 17:21–25",
+      "text": "\"See, Lord, and raise up for them their king, the son of David, to rule over your servant Israel in the time known to you, O God. Undergird him with the strength to destroy the unrighteous rulers, to purge Jerusalem from gentiles who trample her to destruction…He will gather a holy people whom he will lead in righteousness, and he will judge the tribes of the people that have been made holy by the Lord their God.\""
+    },
+    "bible": {
+      "ref": "Luke 1:32–33",
+      "text": "He shall be great, and shall be called the Son of the Highest: and the Lord God shall give unto him the throne of his father David: And he shall reign over the house of Jacob for ever; and of his kingdom there shall be no end."
+    },
+    "theme": "Davidic Messiah",
+    "notes": "Psalms of Solomon 17 is the most developed pre-NT Jewish text on the Davidic Messiah — directly paralleling the Lukan Annunciation's messianic language."
+  },
+  {
+    "id": 29,
+    "lostBook": {
+      "name": "Community Rule (1QS)",
+      "ref": "1QS 3:13–15",
+      "text": "\"The Master shall instruct all the sons of light and shall teach them the nature of all the children of men according to the kind of spirit which they possess, the signs identifying their works during their lifetime, their visitation for chastisement, and the time of their reward. From the God of Knowledge comes all that is and shall be. Before ever they existed He established their whole design, and when, as ordained for them, they come into being, it is in accord with His glorious design that they accomplish their task without change.\""
+    },
+    "bible": {
+      "ref": "John 1:4–5, 8:12",
+      "text": "In him was life; and the life was the light of men. And the light shineth in darkness; and the darkness comprehended it not. (1:4–5)…Then spake Jesus again unto them, saying, I am the light of the world: he that followeth me shall not walk in darkness, but shall have the light of life. (8:12)"
+    },
+    "theme": "Light vs. Darkness",
+    "notes": "The Qumran Two Spirits dualism — light vs. darkness, truth vs. falsehood — is the closest conceptual background for the Johannine light/darkness motif, suggesting shared sectarian milieu."
+  },
+  {
+    "id": 30,
+    "lostBook": {
+      "name": "Community Rule (1QS)",
+      "ref": "1QS 6:4–6",
+      "text": "\"And when they set the table to eat, or prepare wine to drink, the priest shall first extend his hand to pronounce a blessing over the first portion of bread and wine. And where ten persons are present, there shall not be lacking a man who is a priest to interpret the Law day and night, continually, concerning the right conduct of a man toward his fellow. The Many shall keep watch in community for a third of every night of the year, to read the Book aloud and study the Law, and to pray together.\""
+    },
+    "bible": {
+      "ref": "1 Corinthians 11:23–25",
+      "text": "For I have received of the Lord that which also I delivered unto you, that the Lord Jesus the same night in which he was betrayed took bread: And when he had given thanks, he brake it, and said, Take, eat: this is my body, which is broken for you: this do in remembrance of me. After the same manner also he took the cup, when he had supped, saying, This cup is the new testament in my blood: this do ye, as oft as ye drink it, in remembrance of me."
+    },
+    "theme": "Community Meal",
+    "notes": "The Qumran communal meal — bread and wine blessed by a priest, consumed together — parallels the Last Supper tradition so closely that scholars debate a direct connection between the Qumran yahad and the earliest Christian Eucharist."
+  },
+  {
+    "id": 31,
+    "lostBook": {
+      "name": "War Scroll (1QM)",
+      "ref": "1QM 1:1–3",
+      "text": "\"The first attack of the Sons of Light shall be undertaken against the forces of the Sons of Darkness, the army of Belial: the troops of Edom, Moab, the sons of Ammon, the Amalekites, Philistia, and the troops of the Kittim of Assyria; and in violation of the covenant are the renegade Sons of Levi, Sons of Judah, and Sons of Benjamin. The princes of Darkness lead their forces. And the Sons of Light and the forces of Darkness shall fight together to show the might of God with the roar of a great multitude and the shout of gods and men.\""
+    },
+    "bible": {
+      "ref": "Revelation 16:14–16",
+      "text": "For they are the spirits of devils, working miracles, which go forth unto the kings of the earth and of the whole world, to gather them to the battle of that great day of God Almighty…And he gathered them together into a place called in the Hebrew tongue Armageddon."
+    },
+    "theme": "Apocalyptic War",
+    "notes": "The War Scroll's Sons of Light vs. Sons of Darkness is the most direct Jewish background for NT apocalyptic dualism. The term \"Belial\" in 1QM as leader of darkness parallels \"Satan/Dragon\" in Revelation. Paul uses \"Beliar\" (2 Cor 6:15) directly."
+  },
+  {
+    "id": 32,
+    "lostBook": {
+      "name": "War Scroll (1QM)",
+      "ref": "1QM 12:7–8",
+      "text": "\"For the multitude of the Holy Ones is with Thee in heaven, and the hosts of the Angels are in thy Holy Dwelling, praising thy name. The chosen of the Holy People hast thou established for thyself in […] the number of their armies. Reign, O Lord, over all, exceedingly; and be exalted, and magnified, O God of gods! And lift up thy hand against Belial, and against all the host of his kingdom, the spirits of wickedness.\""
+    },
+    "bible": {
+      "ref": "Revelation 12:7–9",
+      "text": "And there was war in heaven: Michael and his angels fought against the dragon; and the dragon fought and his angels, And prevailed not; neither was their place found any more in heaven. And the great dragon was cast out, that old serpent, called the Devil, and Satan, which deceiveth the whole world."
+    },
+    "theme": "Apocalyptic War",
+    "notes": "Both texts feature Michael leading angelic armies against Belial/Satan. The War Scroll names Michael as \"Prince of Light\" (1QM 13:10) — the same role Revelation assigns him in the cosmic war. This is a direct theological parallel."
+  },
+  {
+    "id": 33,
+    "lostBook": {
+      "name": "War Scroll (1QM)",
+      "ref": "1QM 14:4–7",
+      "text": "\"Blessed be the God of Israel who keeps mercy for His covenant and His appointed times of salvation for the people He has redeemed! He has called those who stumble unto wondrous things, and gathered the assembly of nations for destruction without a remnant, lifting up by judgment the heart of the melting. For thou art a terrible God, and the glory of thy majesty and the greatness of thy wonders are without end.\""
+    },
+    "bible": {
+      "ref": "Ephesians 6:11–13",
+      "text": "Put on the whole armour of God, that ye may be able to stand against the wiles of the devil. For we wrestle not against flesh and blood, but against principalities, against powers, against the rulers of the darkness of this world, against spiritual wickedness in high places…that ye may be able to withstand in the evil day."
+    },
+    "theme": "Spiritual Warfare",
+    "notes": "Paul's \"armor of God\" passage shares vocabulary with the War Scroll — cosmic battle against spiritual darkness requiring divine armor. Scholars widely regard 1QM as the closest conceptual parallel to Ephesians 6 in Second Temple literature."
+  },
+  {
+    "id": 34,
+    "lostBook": {
+      "name": "Thanksgiving Hymns (1QH)",
+      "ref": "1QH 11:19–23",
+      "text": "\"I thank you, O Lord, because You have not abandoned me when I lived as a stranger among an alien people, nor judged me according to my sin, nor cast me away because of my iniquitous deeds. Rather, You saved my life from the pit, and raised me up from the depths of Sheol to an everlasting height, that I might walk in the plain of an endless plain, and that I might know that in You there is hope for one returning from transgression and turning from sin.\""
+    },
+    "bible": {
+      "ref": "Romans 5:8; Ephesians 2:4–6",
+      "text": "But God commendeth his love toward us, in that, while we were yet sinners, Christ died for us. (Rom 5:8)…But God, who is rich in mercy, for his great love wherewith he loved us…hath raised us up together, and made us sit together in heavenly places in Christ Jesus. (Eph 2:4–6)"
+    },
+    "theme": "Grace & Redemption",
+    "notes": "The language of being raised from Sheol to an \"everlasting height\" in 1QH is the closest pre-NT parallel to Pauline participatory eschatology — already seated in heavenly places. Both texts ground salvation in divine initiative, not human merit."
+  },
+  {
+    "id": 35,
+    "lostBook": {
+      "name": "Thanksgiving Hymns (1QH)",
+      "ref": "1QH 8:4–11",
+      "text": "\"I thank you, O Lord, for You have set me as a fountain of flowing water in a dry land, and as a spring of water in a desolate earth, and as one who waters a garden. You planted a plantation of cypresses and elms together with cedars for your glory. Trees of life hidden by a secret spring among all trees that drink water, and they will sprout a branch for an eternal plantation, taking root before they bear fruit.\""
+    },
+    "bible": {
+      "ref": "John 4:14; 7:37–38",
+      "text": "But whosoever drinketh of the water that I shall give him shall never thirst; but the water that I shall give him shall be in him a well of water springing up into everlasting life. (4:14)…If any man thirst, let him come unto me, and drink. He that believeth on me, as the scripture hath said, out of his belly shall flow rivers of living water. (7:37–38)"
+    },
+    "theme": "Living Water",
+    "notes": "The \"fountain of living water\" imagery in 1QH — water in a dry land, an ever-flowing spring for the plantation of God — is the closest Jewish parallel to Jesus' \"living water\" sayings in John 4 and 7."
+  },
+  {
+    "id": 36,
+    "lostBook": {
+      "name": "Thanksgiving Hymns (1QH)",
+      "ref": "1QH 15:26–28",
+      "text": "\"What is flesh [that it should merit such things]? What is a creature of clay that its path should be made straight? The counsel of the spirit You determined before ever You created it…and I know that righteousness is not in humanity, nor perfection of way in a son of man. To God Most High belong all works of righteousness, but the way of man is not established except by the spirit which God created for him.\""
+    },
+    "bible": {
+      "ref": "Romans 3:10–12, 20",
+      "text": "As it is written, There is none righteous, no, not one: There is none that understandeth, there is none that seeketh after God. They are all gone out of the way, they are together become unprofitable…Therefore by the deeds of the law there shall no flesh be justified in his sight."
+    },
+    "theme": "Human Sinfulness",
+    "notes": "1QH's doctrine that \"righteousness is not in humanity\" and that right standing comes entirely from God parallels Paul's argument in Romans 3 almost exactly — revealing a common Second Temple theology of human incapacity and divine grace."
+  },
+  {
+    "id": 37,
+    "lostBook": {
+      "name": "Damascus Document (CD)",
+      "ref": "CD 1:3–7",
+      "text": "\"For when they were unfaithful in forsaking Him, He hid His face from Israel and from His Sanctuary and gave them up to the sword. But when He remembered the covenant with the forefathers, He left a remnant for Israel and did not deliver them up to destruction. And in the era of wrath — three hundred and ninety years after He had given them into the hand of Nebuchadnezzar — He visited them, and caused to sprout from Israel and Aaron a root of planting to inherit His land.\""
+    },
+    "bible": {
+      "ref": "Romans 11:1–5",
+      "text": "I say then, Hath God cast away his people? God forbid…God hath not cast away his people which he foreknew…Even so then at this present time also there is a remnant according to the election of grace."
+    },
+    "theme": "Remnant Theology",
+    "notes": "Both CD and Paul use \"remnant\" theology to explain how God preserves a faithful community through judgment. Paul almost certainly draws on this Qumran-style covenant remnant framework when addressing Jewish-Gentile relations in Romans 9–11."
+  },
+  {
+    "id": 38,
+    "lostBook": {
+      "name": "Damascus Document (CD)",
+      "ref": "CD 6:14–17",
+      "text": "\"And all who have been brought into the covenant shall not enter the sanctuary to light His altar in vain. They shall lock the door…None of those who have entered the covenant of God shall enter the Temple to light His altar in vain, unless they take care to act in accordance with the exact interpretation of the Torah for the era of wickedness: to separate from the children of the pit; to abstain from wicked wealth which defiles, either by promise or by oath.\""
+    },
+    "bible": {
+      "ref": "2 Corinthians 6:14–17",
+      "text": "Be ye not unequally yoked together with unbelievers: for what fellowship hath righteousness with unrighteousness? and what communion hath light with darkness?…Wherefore come out from among them, and be ye separate, saith the Lord, and touch not the unclean thing."
+    },
+    "theme": "Separation from Evil",
+    "notes": "Paul's \"come out and be separate\" command (2 Cor 6:14–17) uses the same theological logic as CD's call for covenant separation from \"children of the pit\" — sectarian boundary language that many scholars trace to a shared Qumran-influenced Jewish background in Paul."
+  },
+  {
+    "id": 39,
+    "lostBook": {
+      "name": "Damascus Document (CD)",
+      "ref": "CD 7:18–20",
+      "text": "\"The star is the Interpreter of the Torah who shall come to Damascus, as it is written: 'A star has marched forth from Jacob, and a sceptre shall rise from Israel.' The sceptre is the Prince of the whole congregation, and when he arises, he shall destroy all the sons of Seth.\""
+    },
+    "bible": {
+      "ref": "Numbers 24:17; Matthew 2:2",
+      "text": "There shall come a Star out of Jacob, and a Sceptre shall rise out of Israel, and shall smite the corners of Moab, and destroy all the children of Sheth. (Num 24:17)…Saying, Where is he that is born King of the Jews? for we have seen his star in the east, and are come to worship him. (Matt 2:2)"
+    },
+    "theme": "Davidic Messiah",
+    "notes": "The Damascus Document interprets the \"Star of Jacob\" prophecy messianically — the same text Matthew connects to the Magi's star. This shows that messianic readings of Numbers 24:17 were established in pre-Christian Jewish interpretation."
+  }
+]
